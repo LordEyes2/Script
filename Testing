@@ -2205,10 +2205,13 @@ local function findturret(parent)
                 end
             end
         end
+    end
 
     local function RTripwire()
         for _, areas in ipairs(game.Workspace.Rooms:GetChildren()) do
+            print(areas)
             if areas:IsA("Model") then
+                print("Yay")
                 for _, areas2 in ipairs(areas:GetChildren()) do
                     if areas2.Name == "Tripwire" then
                         if areas2:FindFirstChild("ProxyPart"):FindFirstChild("LabelAboveItem") then
@@ -2221,7 +2224,6 @@ local function findturret(parent)
                         end
                     end
                 end
-                RTripWire(areas)
             end
         end
     end
