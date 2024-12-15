@@ -2203,7 +2203,6 @@ local function findturret(parent)
                         end
                     end
                 end
-                FtripWire(Rooms)
             end
         end
     end
