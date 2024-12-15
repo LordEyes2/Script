@@ -2166,9 +2166,9 @@ local function findturret(parent)
     end
 
     local function Ftripwire()
-        for _, areas in ipairs(game.Workspace.Rooms:GetChildren()) do
-            if areas:IsA("Model") then
-                for _, areas2 in ipairs(areas:GetChildren()) do
+        for _, Rooms in ipairs(game.Workspace.Rooms:GetChildren()) do
+            if Rooms:IsA("Model") then
+                for _, areas2 in ipairs(Rooms:GetChildren()) do
                     if areas2.Name == "Tripwire" then
                         if not areas2:FindFirstChild("ProxyPart"):FindFirstChild("LabelAboveItem") then
                             -- Example: Adding a BillboardGui for label
@@ -2201,7 +2201,7 @@ local function findturret(parent)
                         end
                     end
                 end
-                FtripWire(areas)
+                FtripWire(Rooms)
             end
         end
     end
