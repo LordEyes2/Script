@@ -1,0 +1,2204 @@
+
+--loadstring: loadstring(game:HttpGet("https://raw.githubusercontent.com/LordEyes2/Script/main/PersonalHub"))()
+
+--loadstring: loadstring(game:HttpGet("https://pastebin.com/raw/MyhX2sT3"))()
+
+if game.PlaceId == 12552538292 or 12411473842 then
+    local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+    
+    local Window = Rayfield:CreateWindow({
+       Name = "Personal Hub (K To Hide)",
+       LoadingTitle = "Personal Interface Hub",
+       LoadingSubtitle = "by [REDACTED]",
+       ConfigurationSaving = {
+          Enabled = false,
+          FolderName = nil, -- Create a custom folder for your hub/game
+          FileName = "Personal Hub"
+       },
+       Discord = {
+          Enabled = false,
+          Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
+          RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+       },
+       KeySystem = false, -- Set this to true to use our key system
+       KeySettings = {
+          Title = "Personal Hub | Key",
+          Subtitle = "Key System",
+          Note = "To obtain the key you must [REDACTED]",
+          FileName = "Key2132132453", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+          SaveKey = false, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+          GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+          Key = {"e"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+       }
+    })
+    
+    local MainTab = Window:CreateTab("Main", nil) -- Title, Image
+    local ToggleTab = Window:CreateTab("Toggles", nil) -- Title, Image
+    local MainSection = MainTab:CreateSection("Main")
+    local ScriptTab = Window:CreateTab("Scripts", nil) -- Title, Image
+    local EquipTab = Window:CreateTab("Tools", nil) -- Title, Image
+    local ScriptSection = ScriptTab:CreateSection("Extra Scripts")
+    local LogsTab = Window:CreateTab("ChangeLogs", nil) -- Title, Image
+    local LogsSection = LogsTab:CreateSection("Information")
+    local Paragraph = LogsTab:CreateParagraph({Title = "", Content = "WORKING"})
+    local Paragraph = LogsTab:CreateParagraph({Title = "", Content = "Soon: highlighted Entities"})
+    local Paragraph = EquipTab:CreateParagraph({Title = "", Content = "You need to have had a codebreacher for the codebreacher to open doors"})
+    local Val1 = nil
+    local Val2 = nil
+    local Val3 = nil
+    local Val4 = nil
+    
+    local Dropdown = EquipTab:CreateDropdown({
+       Name = "Tool Equip",
+       Options = {"NormalKeyCard","InnerKeyCard", "CodeBreacher"},
+       CurrentOption = {"None"},
+       MultipleOptions = false,
+       Flag = "Dropdown1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+       Callback = function(Option)
+        local player = game.Players.LocalPlayer
+        local NumbVal = Instance.new("NumberValue")
+        NumbVal.Value = 1
+        NumbVal.Name = Option[1]
+        NumbVal.Parent = player.PlayerFolder.Inventory
+       -- The function that takes place when the selected option is changed
+       -- The variable (Option) is a table of strings for the current selected options
+       end,
+    })
+    
+    local Dropdown = EquipTab:CreateDropdown({
+       Name = "Tool Unequip",
+       Options = {"NormalKeyCard","InnerKeyCard", "CodeBreacher"},
+       CurrentOption = {"None"},
+       MultipleOptions = false,
+       Flag = "Dropdown1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+       Callback = function(Option)
+        local player = game.Players.LocalPlayer
+        local NumbValD = player.PlayerFolder.Inventory:FindFirstChild(Option[1])
+        NumbValD:Destroy()
+       end,
+    })
+    
+    local Toggle22 = ToggleTab:CreateToggle({
+        Name = "Interactable ESP",
+        CurrentValue = false,
+        Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+        Callback = function(Value1)
+             Val1 = Value1
+        end,
+     })
+    
+     local Toggle11 = ToggleTab:CreateToggle({
+        Name = "Entity ESP",
+        CurrentValue = false,
+        Flag = "Toggle12", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+        Callback = function(Value2)
+             Val2 = Value2
+        end,
+     })
+    
+     local Toggle33 = ToggleTab:CreateToggle({
+        Name = "Auto Delete Damage Parts",
+        CurrentValue = false,
+        Flag = "Toggle13", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+        Callback = function(Value3)
+             Val3 = Value3
+        end,
+     })
+     
+     local Toggle44 = ToggleTab:CreateToggle({
+        Name = "Insta Open Doors",
+        CurrentValue = false,
+        Flag = "Toggle14", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+        Callback = function(Value4)
+             Val4 = Value4
+        end,
+     })
+    
+    
+    local Button222 = MainTab:CreateButton({
+        Name = "Remove Currency PopUp",
+        Callback = function()
+            -- Get the local player
+    local player = game.Players.LocalPlayer
+    
+    -- Define the path to the PopUp
+    local popUpPath = "Main.Client.MainClient.Currency.PopUp"
+    
+    -- Function to find and hide the PopUp
+    local function hidePopUp()
+        -- Find the PopUp object
+        local popUp = player.PlayerGui.Main.Client.MainClient.Currency:WaitForChild("PopUp")
+        local Currency = player.PlayerGui.Main.Client.MainClient.Currency
+        -- Check if the PopUp exists and is a GuiObject
+        if popUp then
+            -- Set Visible to false to hide it
+            popUp.Visible = false
+            --print("PopUp hidden successfully.")
+        else
+            --print("PopUp not found or is not a GuiObject.")
+        end
+    end
+    
+    -- Call the function to hide the PopUp
+    hidePopUp()
+        end,
+    })
+
+    local Button2222 = MainTab:CreateButton({
+        Name = "Enable/Disable Turrets",
+        Callback = function()
+            local function findturretAtt(parent)
+                for _, rooms in ipairs(parent:GetChildren()) do
+                    if rooms:IsA("Model") then
+                        for _, roomStuff in ipairs(rooms:GetChildren()) do
+                            if roomStuff.Name == "Interactables" then
+                                for _, interactables2 in ipairs(roomStuff:GetChildren()) do
+                                    if interactables2.Name == "TurretSpawn" or "TurretSpawn1" or "TurretSpawn2" or "TurretSpawn3" or "TurretSpawn4" or "TurretSpawn5" then
+                                        for _, turret in ipairs(interactables2:GetChildren()) do
+                                            if turret.Name == "Turret" then
+                                            local Attribute = interactables2:GetAttribute("Active")
+                                            if not interactables2:GetAttribute("Disabled") then
+                                            if Attribute == true then
+                                                interactables2:SetAttribute("Active", false)
+                                            end
+                                            if Attribute == false then
+                                                interactables2:SetAttribute("Active", true)
+                                            end
+                                        end
+                                        end
+                                    end
+                                    end
+                                end
+                            end
+                        end
+                        findturretAtt(rooms)
+                    end
+                end
+            end
+        findturretAtt(game.Workspace.Rooms)
+        end,
+    })
+    
+    
+    local Button2312 = MainTab:CreateButton({
+        Name = "Fix all Cables",
+        Callback = function()
+            local function recursiveSearch53(parent)
+                for _, child in ipairs(parent:GetChildren()) do
+                    if child:IsA("Model") then
+                        -- Search through the children of the model
+                        for _, subchild in ipairs(child:GetChildren()) do
+                              if subchild.Name == "Interactables" then
+                                for _, subsubchild in ipairs(subchild:GetChildren()) do
+                                    --print("Obv")
+                                            for _, Fixable in ipairs({
+                                                "BrokenCables"
+                                            }) do
+                                                if subsubchild.Name == Fixable then
+                                                    --print("22")
+                                                if subsubchild.Name == "BrokenCables" then
+                                                    --print("11")
+                                                --for _, Suuubchild in ipairs(subsubchild:GetChildren()) do
+                                                    --print(Suuubchild)
+                                                local Gen = subsubchild:FindFirstChild("Model")
+                                                --print(Gen)
+                                                if Gen then
+                                                    fireproximityprompt(subsubchild.ProxyPart.ProximityPrompt)
+                                                end
+                                            --end
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                        -- Recursively search through children of the model
+                        recursiveSearch53(child)
+                    end
+                end
+            end
+                local roomsModel4 = game.Workspace.Rooms
+                recursiveSearch53(roomsModel4)
+        end,
+     })
+    
+    local Button231 = MainTab:CreateButton({
+        Name = "Fix all Gens",
+        Callback = function()
+            local function recursiveSearch23(parent)
+                for _, child in ipairs(parent:GetChildren()) do
+                    if child:IsA("Model") then
+                        -- Search through the children of the model
+                        for _, subchild in ipairs(child:GetChildren()) do
+                              if subchild.Name == "Interactables" then
+                                for _, subsubchild in ipairs(subchild:GetChildren()) do
+                                    --print("Obv")
+                                            for _, Fixable in ipairs({
+                                                "EncounterGenerator"
+                                            }) do
+                                                if subsubchild.Name == Fixable then
+                                                    --print("22")
+                                                if subsubchild.Name == "EncounterGenerator" then
+                                                    --print("11")
+                                                --for _, Suuubchild in ipairs(subsubchild:GetChildren()) do
+                                                    --print(Suuubchild)
+                                                local Gen = subsubchild:FindFirstChild("Model")
+                                                --print(Gen)
+                                                if Gen then
+                                                    fireproximityprompt(subsubchild.ProxyPart.ProximityPrompt)
+                                                end
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                        -- Recursively search through children of the model
+                        recursiveSearch23(child)
+                    end
+                end
+                local roomsModel3 = game.Workspace.Rooms
+                recursiveSearch23(roomsModel3)
+        end,
+     })
+    
+    
+     local Keybind312 = MainTab:CreateKeybind({
+        Name = "Grab All",
+        CurrentKeybind = "Q",
+        HoldToInteract = false,
+        Flag = "Keybind121", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+        Callback = function(Keybind)
+            local player = game.Players.LocalPlayer.Name
+            local HRP = game.Workspace.Characters[player].HumanoidRootPart.Position
+           local itemPos = nil
+           local distance = nil 
+           local radius = 10
+            local function recursiveSearch59(parent)
+                    for _, child in ipairs(parent:GetChildren()) do
+                        if child:IsA("Model") then
+                            -- Search through the children of the model
+                            for _, subchild in ipairs(child:GetChildren()) do
+                                    -- Search through the children of subchild
+                                    for _, subsubchild in ipairs(subchild:GetChildren()) do
+                                        -- Check if subsubchild is SpawnLocations
+                                        if subsubchild.Name == "SpawnLocations" then
+                                            --print("Found SpawnLocations in:", subchild.Name)
+                                            for _, spawnItem in ipairs(subsubchild:GetChildren()) do
+                                                for _, itemName in ipairs({
+                                                    "Blacklight", "Book", "CodeBreacher", "FlashBeacon",
+                                                    "Flashlight", "Gummylight", "NotebookItem", "SmallLantern",
+                                                    "SplorgLight", "WindupLight", "BigFlashBeacon", "Lantern",
+                                                    "Medkit", "5Currency", "10Currency", "15Currency", "25Currency",
+                                                    "50Currency", "100Currency", "200Currency", "NormalKeyCard",
+                                                    "InnerKeyCard", "RidgeKeyCard", "DefaultBattery1", "DefaultBattery2",
+                                                    "DefaultBattery3", "AltBattery1", "AltBattery2",
+                                                    "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon"
+                                                }) do
+                                                    local item = spawnItem:FindFirstChild(itemName)
+                                                    --print(distance)
+                                                    if item then
+                                                        itemPos = item.ProxyPart.Position
+                                                        distance = (HRP - itemPos).Magnitude 
+                                                        radius = 10
+                                                        if distance <= radius then
+                                                        for _, itemprxy in ipairs(item:GetChildren()) do
+                                                            for _, itemprxypart in ipairs(itemprxy:GetChildren()) do
+                                                            if itemprxypart:IsA("ProximityPrompt") then
+                                                                itemprxypart.RequiresLineOfSight = false
+                                                                --itemprxypart.RequiresLineOfSight = false
+                                                                fireproximityprompt(itemprxypart)
+                                                                --fireproximityprompt(itemprxypart)
+                                                            end
+                                                        end
+                                                    end
+                                                end
+                                                end
+                                                end
+                                            end
+                                        end
+                                    end
+                            end
+                            -- Recursively search through children of the model
+                            recursiveSearch59(child)
+                        end
+                    end
+                end
+    
+                local function recursiveSearch58(parent)
+                    for _, child in ipairs(parent:GetChildren()) do
+                        if child:IsA("Model") then
+                            -- Search through the children of the model
+                            for _, subchild in ipairs(child:GetChildren()) do
+                                if subchild:IsA("Folder") then
+                                    for _, subsubchild in ipairs(subchild:GetChildren()) do
+                                        for _, subsubsubchild in ipairs(subsubchild:GetChildren()) do
+                                            if subsubsubchild.Name == "SpawnLocations" then
+                                            for _, spawnItem in ipairs(subsubsubchild:GetChildren()) do
+                                                for _, itemName in ipairs({
+                                                    "Blacklight", "Book", "CodeBreacher", "FlashBeacon",
+                                                    "Flashlight", "Gummylight", "NotebookItem", "SmallLantern",
+                                                    "SplorgLight", "WindupLight", "BigFlashBeacon", "Lantern",
+                                                    "Medkit", "5Currency", "10Currency", "15Currency", "25Currency",
+                                                    "50Currency", "100Currency", "200Currency", "NormalKeyCard",
+                                                    "InnerKeyCard", "RidgeKeyCard", "DefaultBattery1", "DefaultBattery2",
+                                                    "DefaultBattery3", "AltBattery1", "AltBattery2",
+                                                    "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon"
+                                                }) do
+                                                    local item = spawnItem:FindFirstChild(itemName)
+                                                    --print(distance)
+    
+                                                    if item then
+                                                    itemPos = item.ProxyPart.Position
+                                                    distance = (HRP - itemPos).Magnitude 
+                                                    radius = 10
+                                                        if distance <= radius then
+                                                        for _, itemprxy in ipairs(item:GetChildren()) do
+                                                            for _, itemprxypart in ipairs(itemprxy:GetChildren()) do
+                                                            if itemprxypart:IsA("ProximityPrompt") then
+                                                                if itemprxypart:IsA("ProximityPrompt") then
+                                                                    itemprxypart.RequiresLineOfSight = false
+                                                                    --itemprxypart.RequiresLineOfSight = false
+                                                                    fireproximityprompt(itemprxypart)
+                                                                    --fireproximityprompt(itemprxypart)
+                                                            end
+                                                        end
+                                                    end
+                                                            end
+                                                            end
+                                                        end
+                                                    end
+                                                end
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                            -- Recursively search through children of the model
+                            recursiveSearch58(child)
+                        end
+                    end
+                end
+                local roomsModel2 = game.Workspace.Rooms
+                recursiveSearch58(roomsModel2)
+                recursiveSearch59(roomsModel2)
+            end,
+    })
+    
+    
+                
+    
+    local Input = EquipTab:CreateInput({
+    
+        Name = "CodeBreacher Value",
+        PlaceholderText = "0",
+        RemoveTextAfterFocusLost = false,
+        Callback = function(Text)
+            local player = game.Players.LocalPlayer
+            local CodeBreacher = player.PlayerFolder.Inventory:FindFirstChild("CodeBreacher")
+            
+            CodeBreacher.Value = Text
+        end,
+     })
+            
+    
+     local Keybind2 = MainTab:CreateKeybind({
+        Name = "Delete Eyefestation",
+        CurrentKeybind = "P",
+        HoldToInteract = false,
+        Flag = "Keybind12", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+        Callback = function(Keybind)
+    -- Define a function to recursively search for and remove Eyefestation
+    local function removeEyefestation(object)
+        local eyefestation = object:FindFirstChild("Eyefestation")
+        if eyefestation then
+            eyefestation:Destroy()
+        end
+    end
+    
+    -- Define a function to recursively search through folders and find the EyefestationSpawn
+    local function searchForEyefestation(parent)
+        -- Check if parent is an Interactables folder
+        if parent.Name == "Interactables" then
+            local eyefestationSpawn = parent:FindFirstChild("EyefestationSpawn") or parent:FindFirstChild("EyefestationRoot")
+            if eyefestationSpawn then
+                removeEyefestation(eyefestationSpawn)
+            end
+        else
+            -- Recursively search through children
+            for _, child in ipairs(parent:GetChildren()) do
+                searchForEyefestation(child)
+            end
+        end
+    end
+    
+    -- Define a function to recursively search through rooms
+    local function searchThroughRooms(parent)
+        -- Check if parent is a room (assuming it's a Model here)
+        if parent:IsA("Model") then
+            -- Look for Interactables folder
+            local interactablesFolder = parent:FindFirstChild("Interactables")
+            if interactablesFolder then
+                -- Search for EyefestationSpawn inside Interactables folder
+                searchForEyefestation(interactablesFolder)
+            end
+        end
+        -- Recursively search through children
+        for _, child in ipairs(parent:GetChildren()) do
+            searchThroughRooms(child)
+        end
+    end
+    
+    -- Main execution starting from game.Workspace.Rooms
+    if game.Workspace.Rooms then
+        searchThroughRooms(game.Workspace.Rooms)
+    end
+    
+        end,
+     }) 
+    --[[
+     local Button = MainTab:CreateButton({
+        Name = "Delete Eyefestation From Office",
+        Callback = function()
+    -- Define a function to recursively search for and remove Eyefestation
+    local function removeEyefestation(object)
+        local eyefestation = object:FindFirstChild("Eyefestation")
+        if eyefestation then
+            eyefestation:Destroy()
+        end
+    end
+    
+    -- Define a function to recursively search for EyefestationSpawn and remove Eyefestation
+    local function searchAndRemoveEyefestationSpawn(parent)
+        local eyefestationSpawn = parent:FindFirstChild("EyefestationSpawn")
+        if eyefestationSpawn then
+            removeEyefestation(eyefestationSpawn)
+        end
+    end
+    
+    -- Define a function to recursively search through rooms and their children
+    local function searchThroughRooms(parent)
+        -- Check if parent is a room (assuming it's a Model)
+        if parent:IsA("Model") then
+            -- Look for Interactables folder inside the room
+            local interactablesFolder = parent:FindFirstChild("Interactables")
+            if interactablesFolder then
+                -- Search for EyefestationSpawn inside Interactables folder
+                searchAndRemoveEyefestationSpawn(interactablesFolder)
+            end
+        end
+    
+        -- Recursively search through children
+        for _, child in ipairs(parent:GetChildren()) do
+            searchThroughRooms(child)
+        end
+    end
+    
+    -- Main execution starting from game.Workspace.Rooms
+    if game.Workspace.Rooms then
+        searchThroughRooms(game.Workspace.Rooms)
+    end
+    
+        end,
+     })
+    --]]
+     --local Label = MainTab:CreateLabel("It may say callback error in console and on the button but it still works!")
+    
+    
+    
+    
+    -- Function to recursively search for Trickster and MonsterLocker and highlight them red
+    local function highlightEntities(parent)
+        -- Check if the parent exists
+        if parent then
+            -- Iterate through each child of the parent
+            for _, child in ipairs(parent:GetChildren()) do
+                for _, subchild in ipairs(child:GetChildren()) do
+                -- Check if the child is named Trickster or MonsterLocker
+               if subchild.Name == "TricksterRoom" or subchild.Name == "MonsterLocker" or "ServerTrickster" or "RidgeTricksterRoom" then
+                    -- Check if the child is a BasePart (assuming they are parts or models)
+                        --print("Found Children")
+                    if subchild:IsA("Model") then
+                        -- Highlight the entity by changing its color to red
+                            if subchild.Name == "MonsterLocker" then
+                                --print("Changed")
+                                if not subchild:FindFirstChild("Outline") then
+    
+                                    local billboard = Instance.new("BillboardGui")
+                                    billboard.Parent = subchild:FindFirstChild("LockerCollision")
+                                    billboard.Size = UDim2.new(5, 0, 5, 0)
+                                    billboard.StudsOffset = Vector3.new(0, 0, 0) -- Offset to position above the item
+                                    billboard.Name = "LabelAboveMonster"
+                                    
+                                    -- Customize the label appearance based on item type
+                                    local label = Instance.new("TextLabel", billboard)
+                                    label.Text = "Monster Locker"
+                                    label.Size = UDim2.new(1, 0, 1, 0)
+                                    label.TextSize = 20
+                                    label.TextColor3 = Color3.new(255, 0, 0)
+                    
+                                    label.BackgroundTransparency = 1
+                                    label.TextScaled = true
+                                    label.Visible = true
+                                    label.TextStrokeTransparency = 0
+                                    label.TextTransparency = 0
+                                    -- Ensure label is visible through walls
+                                    billboard.AlwaysOnTop = true
+                                local Highlight = Instance.new("Highlight")
+                                Highlight.Parent = subchild
+                                Highlight.Name = "Outline"
+                                Highlight.OutlineColor = Color3.new(0,0,0)
+                                Highlight.FillColor = Color3.fromRGB(255, 0, 0)
+                                Highlight.FillTransparency = 0.2
+                                --subchild.LockerCollision.Transparency = 0
+                                --subchild.LockerCollision.Color = Color3.fromRGB(255, 0, 0) -- Red color
+                                --subchild.LockerCollision.Material = Enum.Material.Neon
+                                end
+                            end
+                            if subchild.Name == "TricksterRoom" then
+                                if not subchild.Interactables.Trickster.TricksterDoor:FindFirstChild("Outline") then
+                                local Highlight = Instance.new("Highlight")
+                                Highlight.Parent = subchild.Interactables.Trickster.TricksterDoor
+                                Highlight.Name = "Outline"
+                                Highlight.OutlineColor = Color3.new(0,0,0)
+                                Highlight.FillColor = Color3.fromRGB(255, 0, 0)
+                                Highlight.FillTransparency = 0.2
+                                local billboard = Instance.new("BillboardGui")
+                                billboard.Parent = subchild.Interactables.Trickster.TricksterDoor.Door
+                                billboard.Size = UDim2.new(5, 0, 5, 0)
+                                billboard.StudsOffset = Vector3.new(-0.1, 6, 0) -- Offset to position above the item
+                                billboard.Name = "LabelAboveMonster"
+                                
+                                -- Customize the label appearance based on item type
+                                local label = Instance.new("TextLabel", billboard)
+                                label.Text = "Trickster"
+                                label.Size = UDim2.new(1, 0, 1, 0)
+                                label.TextSize = 20
+                                label.TextColor3 = Color3.new(255, 0, 0)
+                
+                                label.BackgroundTransparency = 1
+                                label.TextScaled = true
+                                label.Visible = true
+                                label.TextStrokeTransparency = 0
+                                label.TextTransparency = 0
+                                -- Ensure label is visible through walls
+                                billboard.AlwaysOnTop = true
+                                end
+                            end
+                            if subchild.Name == "ServerTrickster" then
+                                if not subchild.Interactables.Trickster.TricksterDoor:FindFirstChild("Outline") then
+                                local Highlight = Instance.new("Highlight")
+                                Highlight.Parent = subchild.Interactables.Trickster.TricksterDoor
+                                Highlight.Name = "Outline"
+                                Highlight.OutlineColor = Color3.new(0,0,0)
+                                Highlight.FillColor = Color3.fromRGB(255, 0, 0)
+                                Highlight.FillTransparency = 0.2
+                                local billboard = Instance.new("BillboardGui")
+                                billboard.Parent = subchild.Interactables.Trickster.TricksterDoor.Door
+                                billboard.Size = UDim2.new(5, 0, 5, 0)
+                                billboard.StudsOffset = Vector3.new(-0.1, 6, 0) -- Offset to position above the item
+                                billboard.Name = "LabelAboveMonster"
+                                
+                                -- Customize the label appearance based on item type
+                                local label = Instance.new("TextLabel", billboard)
+                                label.Text = "Trickster"
+                                label.Size = UDim2.new(1, 0, 1, 0)
+                                label.TextSize = 20
+                                label.TextColor3 = Color3.new(255, 0, 0)
+                
+                                label.BackgroundTransparency = 1
+                                label.TextScaled = true
+                                label.Visible = true
+                                label.TextStrokeTransparency = 0
+                                label.TextTransparency = 0
+                                -- Ensure label is visible through walls
+                                billboard.AlwaysOnTop = true
+                                end
+                            end
+                            if subchild.Name == "RidgeTricksterRoom" then
+                                if not subchild.Interactables.Trickster.TricksterDoor:FindFirstChild("Outline") then
+                                local Highlight = Instance.new("Highlight")
+                                Highlight.Parent = subchild.Interactables.Trickster.TricksterDoor
+                                Highlight.Name = "Outline"
+                                Highlight.OutlineColor = Color3.new(0,0,0)
+                                Highlight.FillColor = Color3.fromRGB(255, 0, 0)
+                                Highlight.FillTransparency = 0.2
+                                    local billboard = Instance.new("BillboardGui")
+                                    billboard.Parent = subchild.Interactables.Trickster.TricksterDoor.Door
+                                    billboard.Size = UDim2.new(5, 0, 5, 0)
+                                    billboard.StudsOffset = Vector3.new(-0.1, 6, 0) -- Offset to position above the item
+                                    billboard.Name = "LabelAboveMonster"
+                                    
+                                    -- Customize the label appearance based on item type
+                                    local label = Instance.new("TextLabel", billboard)
+                                    label.Text = "Trickster"
+                                    label.Size = UDim2.new(1, 0, 1, 0)
+                                    label.TextSize = 20
+                                    label.TextColor3 = Color3.new(255, 0, 0)
+                    
+                                    label.BackgroundTransparency = 1
+                                    label.TextScaled = true
+                                    label.Visible = true
+                                    label.TextStrokeTransparency = 0
+                                    label.TextTransparency = 0
+                                    -- Ensure label is visible through walls
+                                    billboard.AlwaysOnTop = true
+                                end
+                            end
+                    end
+                end
+                end
+                highlightEntities(child)
+            end
+        end
+    end
+    
+    
+    
+    local Button = ScriptTab:CreateButton({
+       Name = "Infinite Yield",
+       Callback = function()
+       loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+       end,
+    })
+    
+    local Button = ScriptTab:CreateButton({
+        Name = "Full Bright",
+        Callback = function()
+            if not _G.FullBrightExecuted then
+    
+                _G.FullBrightEnabled = false
+            
+                _G.NormalLightingSettings = {
+                    Brightness = game:GetService("Lighting").Brightness,
+                    ClockTime = game:GetService("Lighting").ClockTime,
+                    FogEnd = game:GetService("Lighting").FogEnd,
+                    GlobalShadows = game:GetService("Lighting").GlobalShadows,
+                    Ambient = game:GetService("Lighting").Ambient
+                }
+            
+                game:GetService("Lighting"):GetPropertyChangedSignal("Brightness"):Connect(function()
+                    if game:GetService("Lighting").Brightness ~= 1 and game:GetService("Lighting").Brightness ~= _G.NormalLightingSettings.Brightness then
+                        _G.NormalLightingSettings.Brightness = game:GetService("Lighting").Brightness
+                        if not _G.FullBrightEnabled then
+                            repeat
+                                wait()
+                            until _G.FullBrightEnabled
+                        end
+                        game:GetService("Lighting").Brightness = 1
+                    end
+                end)
+            
+                game:GetService("Lighting"):GetPropertyChangedSignal("ClockTime"):Connect(function()
+                    if game:GetService("Lighting").ClockTime ~= 12 and game:GetService("Lighting").ClockTime ~= _G.NormalLightingSettings.ClockTime then
+                        _G.NormalLightingSettings.ClockTime = game:GetService("Lighting").ClockTime
+                        if not _G.FullBrightEnabled then
+                            repeat
+                                wait()
+                            until _G.FullBrightEnabled
+                        end
+                        game:GetService("Lighting").ClockTime = 12
+                    end
+                end)
+            
+                game:GetService("Lighting"):GetPropertyChangedSignal("FogEnd"):Connect(function()
+                    if game:GetService("Lighting").FogEnd ~= 786543 and game:GetService("Lighting").FogEnd ~= _G.NormalLightingSettings.FogEnd then
+                        _G.NormalLightingSettings.FogEnd = game:GetService("Lighting").FogEnd
+                        if not _G.FullBrightEnabled then
+                            repeat
+                                wait()
+                            until _G.FullBrightEnabled
+                        end
+                        game:GetService("Lighting").FogEnd = 786543
+                    end
+                end)
+            
+                game:GetService("Lighting"):GetPropertyChangedSignal("GlobalShadows"):Connect(function()
+                    if game:GetService("Lighting").GlobalShadows ~= false and game:GetService("Lighting").GlobalShadows ~= _G.NormalLightingSettings.GlobalShadows then
+                        _G.NormalLightingSettings.GlobalShadows = game:GetService("Lighting").GlobalShadows
+                        if not _G.FullBrightEnabled then
+                            repeat
+                                wait()
+                            until _G.FullBrightEnabled
+                        end
+                        game:GetService("Lighting").GlobalShadows = false
+                    end
+                end)
+            
+                game:GetService("Lighting"):GetPropertyChangedSignal("Ambient"):Connect(function()
+                    if game:GetService("Lighting").Ambient ~= Color3.fromRGB(178, 178, 178) and game:GetService("Lighting").Ambient ~= _G.NormalLightingSettings.Ambient then
+                        _G.NormalLightingSettings.Ambient = game:GetService("Lighting").Ambient
+                        if not _G.FullBrightEnabled then
+                            repeat
+                                wait()
+                            until _G.FullBrightEnabled
+                        end
+                        game:GetService("Lighting").Ambient = Color3.fromRGB(178, 178, 178)
+                    end
+                end)
+            
+                game:GetService("Lighting").Brightness = 1
+                game:GetService("Lighting").ClockTime = 12
+                game:GetService("Lighting").FogEnd = 786543
+                game:GetService("Lighting").GlobalShadows = false
+                game:GetService("Lighting").Ambient = Color3.fromRGB(178, 178, 178)
+            
+                local LatestValue = true
+                spawn(function()
+                    repeat
+                        wait()
+                    until _G.FullBrightEnabled
+                    while wait() do
+                        if _G.FullBrightEnabled ~= LatestValue then
+                            if not _G.FullBrightEnabled then
+                                game:GetService("Lighting").Brightness = _G.NormalLightingSettings.Brightness
+                                game:GetService("Lighting").ClockTime = _G.NormalLightingSettings.ClockTime
+                                game:GetService("Lighting").FogEnd = _G.NormalLightingSettings.FogEnd
+                                game:GetService("Lighting").GlobalShadows = _G.NormalLightingSettings.GlobalShadows
+                                game:GetService("Lighting").Ambient = _G.NormalLightingSettings.Ambient
+                            else
+                                game:GetService("Lighting").Brightness = 1
+                                game:GetService("Lighting").ClockTime = 12
+                                game:GetService("Lighting").FogEnd = 786543
+                                game:GetService("Lighting").GlobalShadows = false
+                                game:GetService("Lighting").Ambient = Color3.fromRGB(178, 178, 178)
+                            end
+                            LatestValue = not LatestValue
+                        end
+                    end
+                end)
+            end
+            
+            _G.FullBrightExecuted = true
+            _G.FullBrightEnabled = not _G.FullBrightEnabled
+        end,
+     })
+    
+     --[[
+    local Button = ScriptTab:CreateButton({
+       Name = "Inf Jump",
+       Callback = function()
+       loadstring(game:HttpGet("https://cdn.wearedevs.net/scripts/Infinite%20Jump.txt"))()
+       end,
+    })
+    --]]
+    --[[
+    local Button = MainTab:CreateButton({
+       Name = "Remove Lighting",
+       Callback = function()
+       -- Get the game service
+    -- Get the game service
+    local game = game
+    local Lighting = game:GetService("Lighting")
+    
+    -- Function to delete all children of a given instance
+    local function deleteAllChildren(parent)
+        for _, child in ipairs(parent:GetChildren()) do
+            child:Destroy()
+        end
+    end
+    
+    -- Delete everything in the Lighting folder
+    deleteAllChildren(Lighting)
+    
+    --print("Deleted all objects in the Lighting folder.")
+     end
+    })--]]
+    
+    local Button = MainTab:CreateButton({
+       Name = "Reveal Document",
+       Callback = function()
+    -- Get the deathModel and necessary services
+    local deathModel = game.Workspace:WaitForChild("deathModel")
+    
+    -- Function to delete children inside TextLabels
+    local function deleteChildren(layout)
+        for _, child in ipairs(layout:GetChildren()) do
+            if child:IsA("TextLabel") then
+                -- Delete all children inside the TextLabel
+                for _, subChild in ipairs(child:GetChildren()) do
+                    subChild:Destroy()
+                end
+            end
+        end
+    end
+    
+    -- Main script logic
+    local leftPageLayout = deathModel.Document.LeftPage.SurfaceGui.LeftPage.Layout
+    local rightPageLayout = deathModel.Document.RightPage.SurfaceGui.RightPage.Layout
+    
+    if leftPageLayout then
+        -- Delete children from LeftPage Layout
+        deleteChildren(leftPageLayout)
+    else
+        warn("LeftPage SurfaceGui LeftPage Layout not found.")
+    end
+    
+    if rightPageLayout then
+        -- Delete children from RightPage Layout
+        deleteChildren(rightPageLayout)
+    else
+        warn("RightPage SurfaceGui RightPage Layout not found.")
+    end
+    
+    
+    
+    end,
+    })
+        
+    local Slider = MainTab:CreateSlider({
+       Name = "Walk Speed",
+       Range = {0, 100},
+       Increment = 1,
+       Suffix = "Speed",
+       CurrentValue = 16,
+       Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+       Callback = function(Value)
+            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = (Value)
+       end,
+    })
+    
+    
+    local Entity = "None"
+    local Dialouge = ""
+    
+    local function Notif()
+    
+    Rayfield:Notify({
+       Title = "Entity Spawned",
+       Content = Entity.." Spawned! "..Dialouge,
+       Duration = 3,
+       Image = nil,
+       Actions = { -- Notification Buttons
+          Ignore = {
+             Name = "Okay!",
+             Callback = function()
+             --print("The user tapped Okay!")
+          end
+       },
+    },
+    })
+    end
+    
+    
+    local alreadyNotifiedWD = false
+    
+    
+    -- List of entity names to monitor
+    local entityNames = {"Angler", "Chainsmoker", "Pinkie", "Blitz", "Pandemonium", "Eyefestation", "Froger", "RidgeAngler", "RidgeBlitz", "RidgeFroger", "RidgePinkie", "A60"}
+    
+    -- Function to check if an entity by name exists in the Workspace
+    local function isEntityInWorkspace(entityName)
+        local workspace = game:GetService("Workspace")
+        local entity = workspace:FindFirstChild(entityName)
+        return entity ~= nil
+    end
+    
+    -- Table to track whether each entity has been notified
+    local notifiedEntities = {
+        Angler = false,
+        Chainsmoker = false,
+        Pinkie = false,
+        Blitz = false,
+        Pandemonium = false,
+        Eyefestation = false,
+        RidgeAngler = false,
+        RidgePinkie = false,
+        RidgeFroger = false,
+        RidgeBlitz = false,
+        A60 = false
+    }
+    
+    -- Function to handle sending messages for each entity
+    local function handleMessage(entityName)
+        -- Check if the entity is found and not previously notified
+        if isEntityInWorkspace(entityName) then
+            if not notifiedEntities[entityName] then
+                -- Notify about the entity
+                if entityName == "Angler" then
+                    Entity = "Angler"
+                    Dialouge = "Hide In A Locker"
+                    Notif()
+                    local billboard = Instance.new("BillboardGui")
+                    billboard.Parent = game.Workspace:FindFirstChild(entityName)
+                    billboard.Size = UDim2.new(8, 0, 8, 0)
+                    billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset to position above the item
+                    billboard.Name = "LabelAboveMonster"
+                    
+                    local Highlight = Instance.new("Highlight")
+                    Highlight.Parent = game.Workspace:FindFirstChild(entityName)
+                    Highlight.Name = "Outline"
+                    Highlight.OutlineColor = Color3.new(0,0,0)
+    
+                    -- Customize the label appearance based on item type
+                    local label = Instance.new("TextLabel", billboard)
+                    label.Text = Entity
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.TextSize = 20
+                    label.TextColor3 = Color3.new(255, 0, 0)
+                    
+                    label.BackgroundTransparency = 1
+                    label.TextScaled = true
+                    label.Visible = true
+                    label.TextStrokeTransparency = 0
+                    label.TextTransparency = 0
+                    -- Ensure label is visible through walls
+                    billboard.AlwaysOnTop = true
+                    print("Found Angler")
+                elseif entityName == "Chainsmoker" then
+                    Entity = "Chainsmoker"
+                    Dialouge = "Take Your Time"
+                    Notif()
+                    local billboard = Instance.new("BillboardGui")
+                    billboard.Parent = game.Workspace:FindFirstChild(entityName)
+                    billboard.Size = UDim2.new(8, 0, 8, 0)
+                    billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset to position above the item
+                    billboard.Name = "LabelAboveMonster"
+                    
+                    -- Customize the label appearance based on item type
+                    local label = Instance.new("TextLabel", billboard)
+                    label.Text = Entity
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.TextSize = 20
+                    label.TextColor3 = Color3.new(255, 0, 0)
+                    
+                    local Highlight = Instance.new("Highlight")
+                    Highlight.Parent = game.Workspace:FindFirstChild(entityName)
+                    Highlight.Name = "Outline"
+                    Highlight.OutlineColor = Color3.new(0,0,0)
+    
+                    label.BackgroundTransparency = 1
+                    label.TextScaled = true
+                    label.Visible = true
+                    label.TextStrokeTransparency = 0
+                    label.TextTransparency = 0
+                    -- Ensure label is visible through walls
+                    billboard.AlwaysOnTop = true
+                    print("Found Chainsmoker")
+                elseif entityName == "Pinkie" then
+                    Entity = "Pinkie"
+                    Dialouge = "LOOOUD"
+                    Notif()
+                    local billboard = Instance.new("BillboardGui")
+                    billboard.Parent = game.Workspace:FindFirstChild(entityName)
+                    billboard.Size = UDim2.new(8, 0, 8, 0)
+                    billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset to position above the item
+                    billboard.Name = "LabelAboveMonster"
+    
+                    local Highlight = Instance.new("Highlight")
+                    Highlight.Parent = game.Workspace:FindFirstChild(entityName)
+                    Highlight.Name = "Outline"
+                    Highlight.OutlineColor = Color3.new(0,0,0)
+    
+                    -- Customize the label appearance based on item type
+                    local label = Instance.new("TextLabel", billboard)
+                    label.Text = Entity
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.TextSize = 20
+                    label.TextColor3 = Color3.new(255, 0, 0)
+                    
+                    label.BackgroundTransparency = 1
+                    label.TextScaled = true
+                    label.Visible = true
+                    label.TextStrokeTransparency = 0
+                    label.TextTransparency = 0
+                    -- Ensure label is visible through walls
+                    billboard.AlwaysOnTop = true
+                    print("Found Pinkie")
+                elseif entityName == "Blitz" then
+                    Entity = "Blitz"
+                    Dialouge = "WHOOOOOOOOOOSH"
+                    Notif()
+                    local billboard = Instance.new("BillboardGui")
+                    billboard.Parent = game.Workspace:FindFirstChild(entityName)
+                    billboard.Size = UDim2.new(8, 0, 8, 0)
+                    billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset to position above the item
+                    billboard.Name = "LabelAboveMonster"
+                    
+                    -- Customize the label appearance based on item type
+                    local label = Instance.new("TextLabel", billboard)
+                    label.Text = Entity
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.TextSize = 20
+                    label.TextColor3 = Color3.new(255, 0, 0)
+    
+                    local Highlight = Instance.new("Highlight")
+                    Highlight.Parent = game.Workspace:FindFirstChild(entityName)
+                    Highlight.Name = "Outline"
+                    Highlight.OutlineColor = Color3.new(0,0,0)
+    
+                    label.BackgroundTransparency = 1
+                    label.TextScaled = true
+                    label.Visible = true
+                    label.TextStrokeTransparency = 0
+                    label.TextTransparency = 0
+                    -- Ensure label is visible through walls
+                    billboard.AlwaysOnTop = true
+                    print("Found Blitz")
+                elseif entityName == "Pandemonium" then
+                    Entity = "Pandemonium"
+                    Dialouge = "Minigame Time :)"
+                    Notif()
+                    local billboard = Instance.new("BillboardGui")
+                    billboard.Parent = game.Workspace:FindFirstChild(entityName)
+                    billboard.Size = UDim2.new(8, 0, 8, 0)
+                    billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset to position above the item
+                    billboard.Name = "LabelAboveMonster"
+                    
+                    -- Customize the label appearance based on item type
+                    local label = Instance.new("TextLabel", billboard)
+                    label.Text = Entity
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.TextSize = 20
+                    label.TextColor3 = Color3.new(255, 0, 0)
+    
+                    local Highlight = Instance.new("Highlight")
+                    Highlight.Parent = game.Workspace:FindFirstChild(entityName)
+                    Highlight.Name = "Outline"
+                    Highlight.OutlineColor = Color3.new(0,0,0)
+    
+                    label.BackgroundTransparency = 1
+                    label.TextScaled = true
+                    label.Visible = true
+                    label.TextStrokeTransparency = 0
+                    label.TextTransparency = 0
+                    -- Ensure label is visible through walls
+                    billboard.AlwaysOnTop = true
+                    print("Found Pandemonium")
+                elseif entityName == "Froger" then
+                    Entity = "Froger"
+                    Dialouge = "He Comes Around Alot"
+                    Notif()
+                    local billboard = Instance.new("BillboardGui")
+                    billboard.Parent = game.Workspace:FindFirstChild(entityName)
+                    billboard.Size = UDim2.new(8, 0, 8, 0)
+                    billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset to position above the item
+                    billboard.Name = "LabelAboveMonster"
+                    
+                    -- Customize the label appearance based on item type
+                    local label = Instance.new("TextLabel", billboard)
+                    label.Text = Entity
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.TextSize = 20
+                    label.TextColor3 = Color3.new(255, 0, 0)
+    
+                    local Highlight = Instance.new("Highlight")
+                    Highlight.Parent = game.Workspace:FindFirstChild(entityName)
+                    Highlight.Name = "Outline"
+                    Highlight.OutlineColor = Color3.new(0,0,0)
+                    
+                    label.BackgroundTransparency = 1
+                    label.TextScaled = true
+                    label.Visible = true
+                    label.TextStrokeTransparency = 0
+                    label.TextTransparency = 0
+                    -- Ensure label is visible through walls
+                    billboard.AlwaysOnTop = true
+                    print("Found Froger")
+                elseif entityName == "Eyefestation" then
+                    Entity = "Eyefestation"
+                    Dialouge = "Look Away!"
+                    Notif()
+                    print("Found Eyefestation")
+            elseif entityName == "RidgeAngler" then
+                Entity = "Angler"
+                Dialouge = "Hide In A Locker"
+                Notif()
+                local billboard = Instance.new("BillboardGui")
+                billboard.Parent = game.Workspace.RidgeAngler
+                billboard.Size = UDim2.new(8, 0, 8, 0)
+                billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset to position above the item
+                billboard.Name = "LabelAboveMonster"
+                
+                -- Customize the label appearance based on item type
+                local label = Instance.new("TextLabel", billboard)
+                label.Text = Entity
+                label.Size = UDim2.new(1, 0, 1, 0)
+                label.TextSize = 20
+                label.TextColor3 = Color3.new(255, 0, 0)
+    
+                local Highlight = Instance.new("Highlight")
+                Highlight.Parent = game.Workspace:FindFirstChild(entityName)
+                Highlight.Name = "Outline"
+                Highlight.OutlineColor = Color3.new(0,0,0)
+                
+                label.BackgroundTransparency = 1
+                label.TextScaled = true
+                label.Visible = true
+                label.TextStrokeTransparency = 0
+                label.TextTransparency = 0
+                -- Ensure label is visible through walls
+                billboard.AlwaysOnTop = true
+                print("Found Angler")
+            elseif entityName == "RidgeBlitz" then
+                Entity = "Blitz"
+                Dialouge = "WOOOOOOSH"
+                Notif()
+                local billboard = Instance.new("BillboardGui")
+                billboard.Parent = game.Workspace.RidgeBlitz
+                billboard.Size = UDim2.new(8, 0, 8, 0)
+                billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset to position above the item
+                billboard.Name = "LabelAboveMonster"
+                
+                -- Customize the label appearance based on item type
+                local label = Instance.new("TextLabel", billboard)
+                label.Text = Entity
+                label.Size = UDim2.new(1, 0, 1, 0)
+                label.TextSize = 20
+                label.TextColor3 = Color3.new(255, 0, 0)
+    
+                local Highlight = Instance.new("Highlight")
+                Highlight.Parent = game.Workspace:FindFirstChild(entityName)
+                Highlight.Name = "Outline"
+                Highlight.OutlineColor = Color3.new(0,0,0)
+                
+                label.BackgroundTransparency = 1
+                label.TextScaled = true
+                label.Visible = true
+                label.TextStrokeTransparency = 0
+                label.TextTransparency = 0
+                -- Ensure label is visible through walls
+                billboard.AlwaysOnTop = true
+                print("Found Blitz")
+            elseif entityName == "RidgeChainsmoker" then
+                Entity = "Chainsmoker"
+                Dialouge = "Take Your Time"
+                Notif()
+                local billboard = Instance.new("BillboardGui")
+                billboard.Parent = game.Workspace.RidgeChainsmoker
+                billboard.Size = UDim2.new(8, 0, 8, 0)
+                billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset to position above the item
+                billboard.Name = "LabelAboveMonster"
+                
+                -- Customize the label appearance based on item type
+                local label = Instance.new("TextLabel", billboard)
+                label.Text = Entity
+                label.Size = UDim2.new(1, 0, 1, 0)
+                label.TextSize = 20
+                label.TextColor3 = Color3.new(255, 0, 0)
+    
+                local Highlight = Instance.new("Highlight")
+                Highlight.Parent = game.Workspace:FindFirstChild(entityName)
+                Highlight.Name = "Outline"
+                Highlight.OutlineColor = Color3.new(0,0,0)
+                
+                label.BackgroundTransparency = 1
+                label.TextScaled = true
+                label.Visible = true
+                label.TextStrokeTransparency = 0
+                label.TextTransparency = 0
+                -- Ensure label is visible through walls
+                billboard.AlwaysOnTop = true
+                print("Found Chainsmoker")
+            elseif entityName == "RidgeFroger" then
+                Entity = "Froger"
+                Dialouge = "He Comes Around Alot"
+                Notif()
+                local billboard = Instance.new("BillboardGui")
+                billboard.Parent = game.Workspace.RidgeFroger
+                billboard.Size = UDim2.new(8, 0, 8, 0)
+                billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset to position above the item
+                billboard.Name = "LabelAboveMonster"
+                
+                -- Customize the label appearance based on item type
+                local label = Instance.new("TextLabel", billboard)
+                label.Text = Entity
+                label.Size = UDim2.new(1, 0, 1, 0)
+                label.TextSize = 20
+                label.TextColor3 = Color3.new(255, 0, 0)
+    
+                local Highlight = Instance.new("Highlight")
+                Highlight.Parent = game.Workspace:FindFirstChild(entityName)
+                Highlight.Name = "Outline"
+                Highlight.OutlineColor = Color3.new(0,0,0)
+                
+                label.BackgroundTransparency = 1
+                label.TextScaled = true
+                label.Visible = true
+                label.TextStrokeTransparency = 0
+                label.TextTransparency = 0
+                -- Ensure label is visible through walls
+                billboard.AlwaysOnTop = true
+                print("Found Froger")
+            elseif entityName == "RidgePinkie" then
+                Entity = "Pinkie"
+                Dialouge = "LOOOUD"
+                Notif()
+                local billboard = Instance.new("BillboardGui")
+                billboard.Parent = game.Workspace.RidgePinkie
+                billboard.Size = UDim2.new(8, 0, 8, 0)
+                billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset to position above the item
+                billboard.Name = "LabelAboveMonster"
+                
+                -- Customize the label appearance based on item type
+                local label = Instance.new("TextLabel", billboard)
+                label.Text = Entity
+                label.Size = UDim2.new(1, 0, 1, 0)
+                label.TextSize = 20
+                label.TextColor3 = Color3.new(255, 0, 0)
+    
+                local Highlight = Instance.new("Highlight")
+                Highlight.Parent = game.Workspace:FindFirstChild(entityName)
+                Highlight.Name = "Outline"
+                Highlight.OutlineColor = Color3.new(0,0,0)
+                
+                label.BackgroundTransparency = 1
+                label.TextScaled = true
+                label.Visible = true
+                label.TextStrokeTransparency = 0
+                label.TextTransparency = 0
+                -- Ensure label is visible through walls
+                billboard.AlwaysOnTop = true
+                print("Found Pinkie")
+            elseif entityName == "A60" then
+                Entity = "A60"
+                Dialouge = "SCRAAAAM!"
+                Notif()
+                local billboard = Instance.new("BillboardGui")
+                billboard.Parent = game.Workspace.A60
+                billboard.Size = UDim2.new(8, 0, 8, 0)
+                billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset to position above the item
+                billboard.Name = "LabelAboveMonster"
+                
+                -- Customize the label appearance based on item type
+                local label = Instance.new("TextLabel", billboard)
+                label.Text = Entity
+                label.Size = UDim2.new(1, 0, 1, 0)
+                label.TextSize = 20
+                label.TextColor3 = Color3.new(255, 0, 0)
+    
+                local Highlight = Instance.new("Highlight")
+                Highlight.Parent = game.Workspace:FindFirstChild(entityName)
+                Highlight.Name = "Outline"
+                Highlight.OutlineColor = Color3.new(0,0,0)
+                
+                label.BackgroundTransparency = 1
+                label.TextScaled = true
+                label.Visible = true
+                label.TextStrokeTransparency = 0
+                label.TextTransparency = 0
+                -- Ensure label is visible through walls
+                billboard.AlwaysOnTop = true
+                print("Found A60")
+            --end
+            end
+                
+                -- Mark the entity as notified
+                notifiedEntities[entityName] = true
+            end
+        else
+            -- Reset notification flag if entity is not found
+            notifiedEntities[entityName] = false
+        end
+    end
+    
+    local function recursivelySearchFixables()
+    
+    local function recursiveSearch2(parent)
+        for _, child in ipairs(parent:GetChildren()) do
+            if child:IsA("Model") then
+                -- Search through the children of the model
+                for _, subchild in ipairs(child:GetChildren()) do
+                      if subchild.Name == "Interactables" then
+                        for _, subsubchild in ipairs(subchild:GetChildren()) do
+                            --print("Obv")
+                                    for _, Fixable in ipairs({
+                                        "EncounterGenerator"
+                                    }) do
+                                        if subsubchild.Name == Fixable then
+                                            --print("22")
+                                        if subsubchild.Name == "EncounterGenerator" then
+                                            --print("11")
+                                        --for _, Suuubchild in ipairs(subsubchild:GetChildren()) do
+                                            --print(Suuubchild)
+                                        local Gen = subsubchild:FindFirstChild("Model")
+                                        --print(Gen)
+                                        if Gen then
+                                            --print("Gucci")
+                                            if not Gen:FindFirstChild("LabelAboveItem") then
+                                                -- Example: Adding a BillboardGui for label
+                                                local billboard = Instance.new("BillboardGui")
+                                                billboard.Parent = Gen
+                                                billboard.Size = UDim2.new(5, 0, 5, 0)
+                                                billboard.StudsOffset = Vector3.new(0, 4, 0) -- Offset to position above the item
+                                                billboard.Name = "LabelAboveItem"
+                                                
+    
+                                                local Highlight = Instance.new("Highlight")
+                                                Highlight.Parent = Gen
+                                                Highlight.Name = "Outline"
+                                                Highlight.OutlineColor = Color3.new(0,0,0)
+    
+    
+                                                -- Customize the label appearance based on item type
+                                                local label = Instance.new("TextLabel", billboard)
+                                                label.Text = "Broken Generator"
+                                                label.Size = UDim2.new(1, 0, 1, 0)
+                                                label.TextSize = 20
+                                                label.BackgroundTransparency = 1
+                                                label.TextScaled = true
+                                                label.Visible = true
+                                                label.TextStrokeTransparency = 1
+                                                label.TextTransparency = 0.2
+                                                label.TextColor3 = Color3.new(255,0,0)
+                                                -- Ensure label is visible through walls
+                                                billboard.AlwaysOnTop = true
+                                        end
+                                        end
+                                    --end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+                -- Recursively search through children of the model
+                recursiveSearch2(child)
+            end
+        end
+    end
+    
+    
+    
+    local function recursiveSearch5(parent)
+        for _, child in ipairs(parent:GetChildren()) do
+            if child:IsA("Model") then
+                -- Search through the children of the model
+                for _, subchild in ipairs(child:GetChildren()) do
+                      if subchild.Name == "Interactables" then
+                        for _, subsubchild in ipairs(subchild:GetChildren()) do
+                            --print("Obv")
+                                    for _, Fixable in ipairs({
+                                        "BrokenCables"
+                                    }) do
+                                        if subsubchild.Name == Fixable then
+                                            --print("22")
+                                        if subsubchild.Name == "BrokenCables" then
+                                            --print("11")
+                                        --for _, Suuubchild in ipairs(subsubchild:GetChildren()) do
+                                            --print(Suuubchild)
+                                        local Gen = subsubchild:FindFirstChild("Model")
+                                        --print(Gen)
+                                        if Gen then
+                                  --print("Gucci")
+                                            if not Gen:FindFirstChild("LabelAboveItem") then
+                                                -- Example: Adding a BillboardGui for label
+                                                local billboard = Instance.new("BillboardGui")
+                                                billboard.Parent = Gen
+                                                billboard.Size = UDim2.new(5, 0, 5, 0)
+                                                billboard.StudsOffset = Vector3.new(0, 4, 0) -- Offset to position above the item
+                                                billboard.Name = "LabelAboveItem"
+                                                
+    
+                                                local Highlight = Instance.new("Highlight")
+                                                Highlight.Parent = Gen
+                                                Highlight.Name = "Outline"
+                                                Highlight.OutlineColor = Color3.new(0,0,0)
+                                                
+    
+                                                -- Customize the label appearance based on item type
+                                                local label = Instance.new("TextLabel", billboard)
+                                                label.Text = "Broken Cable"
+                                                label.Size = UDim2.new(1, 0, 1, 0)
+                                                label.TextSize = 20
+                                                label.BackgroundTransparency = 1
+                                                label.TextScaled = true
+                                                label.Visible = true
+                                                label.TextStrokeTransparency = 1
+                                                label.TextTransparency = 0.2
+                                                label.TextColor3 = Color3.new(255,0,0)
+                                                -- Ensure label is visible through walls
+                                                billboard.AlwaysOnTop = true
+                                        end
+                                        end
+                                    --end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+                -- Recursively search through children of the model
+                recursiveSearch5(child)
+            end
+        end
+    end
+        local roomsModel22 = game.Workspace:WaitForChild("Rooms")
+        recursiveSearch2(roomsModel22)
+        recursiveSearch5(roomsModel22)
+    end
+    
+    local function recursivelySearchItems() 
+    local function recursiveSearch(parent)
+        for _, child in ipairs(parent:GetChildren()) do
+            if child:IsA("Model") then
+                -- Search through the children of the model
+                for _, subchild in ipairs(child:GetChildren()) do
+                        -- Search through the children of subchild
+                        for _, subsubchild in ipairs(subchild:GetChildren()) do
+                            -- Check if subsubchild is SpawnLocations
+                            if subsubchild.Name == "SpawnLocations" then
+                                --print("Found SpawnLocations in:", subchild.Name)
+                                for _, spawnItem in ipairs(subsubchild:GetChildren()) do
+                                    for _, itemName in ipairs({
+                                        "Blacklight", "Book", "CodeBreacher", "FlashBeacon",
+                                        "Flashlight", "Gummylight", "NotebookItem", "SmallLantern",
+                                        "SplorgLight", "WindupLight", "BigFlashBeacon", "Lantern",
+                                        "Medkit", "5Currency", "10Currency", "15Currency", "25Currency",
+                                        "50Currency", "100Currency", "200Currency", "NormalKeyCard",
+                                        "InnerKeyCard", "RidgeKeyCard", "DefaultBattery1", "DefaultBattery2",
+                                        "DefaultBattery3", "AltBattery1", "AltBattery2",
+                                        "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon"
+                                    }) do
+                                        local item = spawnItem:FindFirstChild(itemName)
+                                        if item then
+                                            --print("Found item:", itemName, "in", spawnItem.Name)
+                                            -- Check if a label already exists
+                                            if not item:FindFirstChild("LabelAboveItem") then
+                                                -- Example: Adding a BillboardGui for label
+                                                local billboard = Instance.new("BillboardGui")
+                                                billboard.Parent = item
+                                                billboard.Size = UDim2.new(3, 0, 3, 0)
+                                                billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset to position above the item
+                                                billboard.Name = "LabelAboveItem"
+                                                
+                                                local Highlight = Instance.new("Highlight")
+                                                Highlight.Parent = item
+                                                Highlight.Name = "Outline"
+                                                Highlight.OutlineColor = Color3.new(0,0,0)
+    
+                                                -- Customize the label appearance based on item type
+                                                local label = Instance.new("TextLabel", billboard)
+                                                label.Text = itemName
+                                                label.Size = UDim2.new(1, 0, 1, 0)
+                                                label.TextSize = 20
+                                                
+                                                -- Set label colors based on item type
+                                                if itemName == "5Currency" or itemName == "10Currency" or itemName == "15Currency"
+                                                    or itemName == "25Currency" or itemName == "50Currency" or itemName == "100Currency"
+                                                    or itemName == "200Currency" then
+                                                    Highlight.FillColor = Color3.new(255,255,0)
+                                                    label.TextColor3 = Color3.new(255, 255, 0) -- Yellow
+                                                elseif itemName == "NormalKeyCard" or itemName == "InnerKeyCard" or itemName == "RidgeKeyCard" then
+                                                    label.TextColor3 = Color3.new(0, 0.67, 255) -- Blue
+                                                    Highlight.FillColor = Color3.new(0,0.67,255)
+                                                else
+                                                    label.TextColor3 = Color3.new(255, 0, 0) -- Red
+                                                    Highlight.FillColor = Color3.new(255,0,0)
+                                                end
+                                                
+                                                label.BackgroundTransparency = 1
+                                                label.TextScaled = true
+                                                label.Visible = true
+                                                label.TextStrokeTransparency = 1
+                                                label.TextTransparency = 0.2
+                                                -- Ensure label is visible through walls
+                                                billboard.AlwaysOnTop = true
+                                            else
+                                                --print("Label already exists for item:", itemName)
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                end
+                -- Recursively search through children of the model
+                recursiveSearch(child)
+            end
+        end
+    end
+    
+    local function recursiveSearch3(parent)
+        for _, child in ipairs(parent:GetChildren()) do
+            if child:IsA("Model") then
+                -- Search through the children of the model
+                for _, subchild in ipairs(child:GetChildren()) do
+                    if subchild:IsA("Folder") then
+                        for _, subsubchild in ipairs(subchild:GetChildren()) do
+                            for _, subsubsubchild in ipairs(subsubchild:GetChildren()) do
+                                if subsubsubchild.Name == "SpawnLocations" then
+                                --print("Found SpawnLocations in:", subchild.Name)
+                                for _, spawnItem in ipairs(subsubsubchild:GetChildren()) do
+                                    for _, itemName in ipairs({
+                                        "Blacklight", "Book", "CodeBreacher", "FlashBeacon",
+                                        "Flashlight", "Gummylight", "NotebookItem", "SmallLantern",
+                                        "SplorgLight", "WindupLight", "BigFlashBeacon", "Lantern",
+                                        "Medkit", "5Currency", "10Currency", "15Currency", "25Currency",
+                                        "50Currency", "100Currency", "200Currency", "NormalKeyCard",
+                                        "InnerKeyCard", "RidgeKeyCard", "DefaultBattery1", "DefaultBattery2",
+                                        "DefaultBattery3", "AltBattery1", "AltBattery2",
+                                        "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon"
+                                    }) do
+                                        local item = spawnItem:FindFirstChild(itemName)
+                                        if item then
+                                            --print("Found item:", itemName, "in", spawnItem.Name)
+                                            -- Check if a label already exists
+                                            if not item:FindFirstChild("LabelAboveItem") then
+                                                -- Example: Adding a BillboardGui for label
+                                                local billboard = Instance.new("BillboardGui")
+                                                billboard.Parent = item
+                                                billboard.Size = UDim2.new(3, 0, 3, 0)
+                                                billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset to position above the item
+                                                billboard.Name = "LabelAboveItem"
+                                                
+                                                local Highlight = Instance.new("Highlight")
+                                                Highlight.Parent = item
+                                                Highlight.Name = "Outline"
+                                                Highlight.OutlineColor = Color3.new(0,0,0)
+    
+                                                -- Customize the label appearance based on item type
+                                                local label = Instance.new("TextLabel", billboard)
+                                                label.Text = itemName
+                                                label.Size = UDim2.new(1, 0, 1, 0)
+                                                label.TextSize = 20
+                                                
+                                                -- Set label colors based on item type
+                                                if itemName == "5Currency" or itemName == "10Currency" or itemName == "15Currency"
+                                                    or itemName == "25Currency" or itemName == "50Currency" or itemName == "100Currency"
+                                                    or itemName == "200Currency" then
+                                                    Highlight.FillColor = Color3.new(255,255,0)
+                                                    label.TextColor3 = Color3.new(255, 255, 0) -- Yellow
+                                                elseif itemName == "NormalKeyCard" or itemName == "InnerKeyCard" or itemName == "RidgeKeyCard" then
+                                                    label.TextColor3 = Color3.new(0, 0.67, 255) -- Blue
+                                                    Highlight.FillColor = Color3.new(0,0.67,255)
+                                                else
+                                                    label.TextColor3 = Color3.new(255, 0, 0) -- Red
+                                                    Highlight.FillColor = Color3.new(255,0,0)
+                                                end
+                                                
+                                                label.BackgroundTransparency = 1
+                                                label.TextScaled = true
+                                                label.Visible = true
+                                                label.TextStrokeTransparency = 1
+                                                label.TextTransparency = 0.2
+                                                -- Ensure label is visible through walls
+                                                billboard.AlwaysOnTop = true
+                                            else
+                                                --print("Label already exists for item:", itemName)
+                                            end
+                                        end
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+                -- Recursively search through children of the model
+                recursiveSearch3(child)
+            end
+        end
+    end
+    local roomsModel54 = game.Workspace.Rooms
+    recursiveSearch(roomsModel54)
+    recursiveSearch3(roomsModel54)
+    end
+    
+    
+    local foundWallDweller = false  -- Flag to track if WallDweller has been found
+    local foundRWallDweller = false
+
+    local function findWallDweller()
+        local monstersFolder = game.Workspace:FindFirstChild("Monsters")
+        if not monstersFolder then
+            return
+        end
+        local RWallDweller = game.Workspace.Monsters:FindFirstChild("RottenWallDweller")
+        local wallDweller = monstersFolder:FindFirstChild("WallDweller")
+        if wallDweller then
+            if not foundWallDweller then
+                if not wallDweller:FindFirstChild("LabelAboveItem") then
+                    Entity = "Wall Dweller"
+                    Dialouge = "Watch Your Back"
+                    Notif()
+                    local billboard = Instance.new("BillboardGui")
+                    billboard.Parent = wallDweller
+                    billboard.Size = UDim2.new(3, 0, 3, 0)
+                    billboard.StudsOffset = Vector3.new(0, 4, 0) -- Offset to position above the item
+                    billboard.Name = "LabelAboveMonster"
+                    
+                    local Highlight = Instance.new("Highlight")
+                    Highlight.Parent = wallDweller
+                    Highlight.Name = "Outline"
+                    Highlight.OutlineColor = Color3.new(0,0,0)
+    
+                    -- Customize the label appearance based on item type
+                    local label = Instance.new("TextLabel", billboard)
+                    label.Text = "Wall Dweller"
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.TextSize = 20
+                    label.TextColor3 = Color3.new(255, 0, 0)
+                    
+                    label.BackgroundTransparency = 1
+                    label.TextScaled = true
+                    label.Visible = true
+                    label.TextStrokeTransparency = 0
+                    label.TextTransparency = 0
+                    -- Ensure label is visible through walls
+                    billboard.AlwaysOnTop = true
+                foundWallDweller = true
+                end
+            end
+        else
+            foundWallDweller = false  -- Reset the flag if WallDweller is no longer found
+        end
+        if RWallDweller then
+            if not foundRWallDweller then
+                if not RWallDweller:FindFirstChild("LabelAboveItem") then
+                    Entity = "Rotten Wall Dweller"
+                    Dialouge = "Hes in the fungus"
+                    Notif()
+                    local billboard = Instance.new("BillboardGui")
+                    billboard.Parent = RWallDweller
+                    billboard.Size = UDim2.new(3, 0, 3, 0)
+                    billboard.StudsOffset = Vector3.new(0, 4, 0) -- Offset to position above the item
+                    billboard.Name = "LabelAboveMonster"
+                    
+                    local Highlight = Instance.new("Highlight")
+                    Highlight.Parent = RWallDweller
+                    Highlight.Name = "Outline"
+                    Highlight.OutlineColor = Color3.new(0,0,0)
+    
+                    -- Customize the label appearance based on item type
+                    local label = Instance.new("TextLabel", billboard)
+                    label.Text = "Rotten Wall Dweller"
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.TextSize = 20
+                    label.TextColor3 = Color3.new(255, 0, 0)
+                    
+                    label.BackgroundTransparency = 1
+                    label.TextScaled = true
+                    label.Visible = true
+                    label.TextStrokeTransparency = 0
+                    label.TextTransparency = 0
+                    -- Ensure label is visible through walls
+                    billboard.AlwaysOnTop = true
+                foundRWallDweller = true
+                end
+            end
+        else
+            foundRWallDweller = false
+        end
+    end
+    --[[
+    local function checkInteractables(folder)
+        for _, child in pairs(folder:GetChildren()) do
+            if child:IsA("Model") and child:FindFirstChild("Interactables") then
+                local interactablesFolder = child.Interactables
+                for _, interactable in pairs(interactablesFolder:GetChildren()) do
+                    if interactable.Name == "EyefestationSpawn" or interactable.Name == "EyefestationRoot" then
+                        local Used = interactable:GetAttribute("Used")
+                        local CanSpawn = interactable:GetAttribute("CanSpawn")
+                        
+                            if CanSpawn == "Yes" and not Used then
+                                Notif()
+                                
+                                -- Monitor for disappearance and reappearance of "Eyefestation"
+                                local eyefestation = interactable:FindFirstChild("Eyefestation")
+                                local handle = nil
+                                local wasUsed = false
+                                
+                                handle = Used:GetPropertyChangedSignal("Used"):Connect(function()
+                                    if Used and not wasUsed then
+                                        print("Eyefestation spawned!")
+                                        wasUsed = true
+                                        -- Monitor disappearance and reappearance of "Eyefestation"
+                                        local eyefestationHandle = eyefestation:GetPropertyChangedSignal("Parent"):Connect(function()
+                                            if eyefestation.Parent == nil then
+                                                print("Eyefestation disappeared!")
+                                            elseif eyefestation.Parent ~= nil then
+                                                print("Eyefestation reappeared!")
+                                            end
+                                        end)
+                                        
+                                        -- Disconnect the eyefestation handle after a while to avoid leaks
+                                        wait(60)  -- Adjust the time as needed
+                                        eyefestationHandle:Disconnect()
+                                    end
+                                end)
+                                
+                                -- Disconnect the handle after a while to avoid leaks
+                                wait(60)  -- Adjust the time as needed
+                                handle:Disconnect()
+                        end
+                    end
+                end
+                -- Recursively check child folders
+                checkInteractables(child)
+            end
+        end
+    end
+    --]]
+    
+    local function recursivelySearchPrompts()
+    
+    local function searchForProximityPrompt(folder)
+        for _, child in pairs(folder:GetChildren()) do
+            if child:IsA("Model") then
+                for _, subsubchild in ipairs(child:GetChildren()) do
+                    if subsubchild.Name == "Entrances" then
+                local entrancesFolder = subsubchild
+                for _, entrance in pairs(entrancesFolder:GetChildren()) do
+                    if entrance:IsA("Model") then
+                        local root = entrance:FindFirstChild("Root")
+                        if root and root:IsA("BasePart") then
+                            local proximityPrompt = root:FindFirstChild("ProximityPrompt")
+                            if proximityPrompt and proximityPrompt:IsA("ProximityPrompt") then
+                                proximityPrompt.HoldDuration = 0
+                                --print("HoldDuration of ProximityPrompt set to 0.")
+                            end
+                        end
+                    end
+                end
+            end
+        end
+                searchForProximityPrompt(child)
+            end
+        end
+    end
+    
+    local function searchForProximityPrompt2(folder)
+        for _, child in pairs(folder:GetChildren()) do
+            if child:IsA("Model") then
+                for _, subsubchild in ipairs(child:GetChildren()) do
+                    if subsubchild.Name == "Interactables" then
+                local entrancesFolder = subsubchild
+                for _, entrance in pairs(entrancesFolder:GetChildren()) do
+                    if entrance:IsA("Model") then
+                      for _, subenterance in ipairs(entrance:GetChildren()) do
+                        for _, subsubenterance in ipairs(subenterance:GetChildren()) do
+                            if subsubenterance.Name == "ProxyPart" then
+                                local proxy = subsubenterance:FindFirstChild("ProximityPrompt")
+                        if proxy then
+                            local proximityPrompt = subsubenterance:FindFirstChild("ProximityPrompt")
+                            if proximityPrompt and proximityPrompt:IsA("ProximityPrompt") then
+                                proximityPrompt.HoldDuration = 0
+                                --print("HoldDuration of ProximityPrompt set to 0.")
+                            end
+                        end
+                        end
+                        end
+                    end
+                    end
+                end
+            end
+        end
+                searchForProximityPrompt2(child)
+            end
+        end
+    end
+    
+    local function searchForProximityPrompt3(folder)
+        for _, child in pairs(folder:GetChildren()) do
+            if child:IsA("Model") then
+                for _, subsubchild in ipairs(child:GetChildren()) do
+                    if subsubchild.Name == "Entrances" then
+                local entrancesFolder = subsubchild
+                for _, entrance in pairs(entrancesFolder:GetChildren()) do
+                    if entrance:IsA("Model") then
+                      for _, subenterance in ipairs(entrance:GetChildren()) do
+                        for _, subsubenterance in ipairs(subenterance:GetChildren()) do
+                            --for _, subsuuubenterance in ipairs(subsubenterance:GetChildren()) do
+                            if subsubenterance.Name == "Main" then
+                                local proxy = subsubenterance:FindFirstChild("ProximityPrompt")
+                        if proxy then
+                            local proximityPrompt = subsubenterance:FindFirstChild("ProximityPrompt")
+                            if proximityPrompt and proximityPrompt:IsA("ProximityPrompt") then
+                                proximityPrompt.HoldDuration = 0
+                                --print("HoldDuration of ProximityPrompt set to 0.")
+                            end
+                        end
+                        end
+                    --end
+                        end
+                    end
+                    end
+                end
+            end
+        end
+                searchForProximityPrompt3(child)
+            end
+        end
+    end
+        local roomsModel222 = game.Workspace:WaitForChild("Rooms")
+        searchForProximityPrompt(roomsModel222)
+        searchForProximityPrompt2(roomsModel222)
+        searchForProximityPrompt3(roomsModel222)
+    end
+    
+    local function recursivelySearchDamageParts()
+    
+    local function deleteDamageParts(folder)
+        for _, child in ipairs(folder:GetChildren()) do
+            if child:IsA("Model") then
+            for _, subchild in ipairs(child:GetChildren()) do
+                --for _, DmgName in ipairs({
+                    --"DamageParts", "Electricity", "DamagePart"
+                --}) do
+                    local DmgParts = child:FindFirstChild("DamageParts")
+                    local DmgPart = child:FindFirstChild("DamagePart")
+                    local EParts = child:FindFirstChild("Electricity")
+                    local Blockpart2 = child:FindFirstChild("BlockPart")
+                    if DmgParts then
+                        DmgParts:Destroy()
+                    end
+                        
+                    if DmgPart then
+                        DmgPart:Destroy()
+                    end
+                        
+                    if EParts then
+                        EParts:Destroy()
+                    end
+                    if Blockpart2 then
+                        Blockpart2:Destroy()
+                    end
+        end
+    end
+        deleteDamageParts(child)
+    end
+    end
+    
+    local function recursiveSearch52(parent)
+        for _, child in ipairs(parent:GetChildren()) do
+            if child:IsA("Model") then
+                -- Search through the children of the model
+                for _, subchild in ipairs(child:GetChildren()) do
+                      if subchild.Name == "Steams" then
+                        for _, subsubchild in ipairs(subchild:GetChildren()) do
+                            local damageparts =  subsubchild:FindFirstChild("DamageParts")
+                            local Blockpart =  subsubchild:FindFirstChild("BlockPart")
+                            if damageparts then
+                                damageparts:Destroy()
+                            end
+                            if Blockpart then
+                                Blockpart:Destroy()
+                            end
+                        end
+                    end
+                end
+            end
+                -- Recursively search through children of the model
+                recursiveSearch52(child)
+        end
+    end
+    local roomsModel3332 = game.Workspace.Rooms
+    deleteDamageParts(roomsModel3332)
+    recursiveSearch52(roomsModel3332)
+    end
+    
+    local function DeleteWDESP()
+        local wallDweller = game.Workspace.Monsters:FindFirstChild("WallDweller")
+        local RWallDweller = game.Workspace.Monsters:FindFirstChild("RottenWallDweller")
+        if wallDweller then
+            if  wallDweller:FindFirstChild("Outline") then
+            wallDweller:FindFirstChild("Outline"):Destroy()
+            wallDweller:FindFirstChild("LabelAboveMonster"):Destroy()
+            end
+        end
+        if RWallDweller then
+            if  RWallDweller:FindFirstChild("Outline") then
+                RWallDweller:FindFirstChild("Outline"):Destroy()
+                RWallDweller:FindFirstChild("LabelAboveMonster"):Destroy()
+            end
+        end
+    end
+    
+    local function DeleteMESP(parent)
+       -- Check if the parent exists
+       if parent then
+        -- Iterate through each child of the parent
+        for _, child in ipairs(parent:GetChildren()) do
+            for _, subchild in ipairs(child:GetChildren()) do
+            -- Check if the child is named Trickster or MonsterLocker
+           if subchild.Name == "TricksterRoom" or subchild.Name == "MonsterLocker" or "ServerTrickster" or "RidgeTricksterRoom" then
+                -- Check if the child is a BasePart (assuming they are parts or models)
+                    --print("Found Children")
+                if subchild:IsA("Model") then
+                    -- Highlight the entity by changing its color to red
+                        if subchild.Name == "MonsterLocker" then
+                            if subchild:FindFirstChild("LockerCollision"):FindFirstChild("LabelAboveMonster") then
+                                subchild:FindFirstChild("LockerCollision"):FindFirstChild("LabelAboveMonster"):Destroy()
+                                subchild:FindFirstChild("Outline"):Destroy()
+                            end
+                        end
+                        if subchild.Name == "TricksterRoom" then
+                            if subchild.Interactables.Trickster.TricksterDoor.Door:FindFirstChild("LabelAboveMonster") then
+                                subchild.Interactables.Trickster.TricksterDoor.Door:FindFirstChild("LabelAboveMonster"):Destroy()
+                                subchild.Interactables.Trickster.TricksterDoor:FindFirstChild("Outline"):Destroy()
+                            end
+                        end
+                        if subchild.Name == "ServerTrickster" then
+                            if subchild.Interactables.Trickster.TricksterDoor.Door:FindFirstChild("LabelAboveMonster") then
+                                subchild.Interactables.Trickster.TricksterDoor.Door:FindFirstChild("LabelAboveMonster"):Destroy()
+                                subchild.Interactables.Trickster.TricksterDoor:FindFirstChild("Outline"):Destroy()
+                            end
+                        end
+                        if subchild.Name == "RidgeTricksterRoom" then
+                            if subchild.Interactables.Trickster.TricksterDoor.Door:FindFirstChild("LabelAboveMonster") then
+                                subchild.Interactables.Trickster.TricksterDoor.Door:FindFirstChild("LabelAboveMonster"):Destroy()
+                                subchild.Interactables.Trickster.TricksterDoor:FindFirstChild("Outline"):Destroy()
+                           end
+                    end
+                end
+            end
+            end
+            DeleteMESP(child)
+        end
+    end
+    end
+    
+    local function DeleteFIXESP1(parent)
+        for _, child in ipairs(parent:GetChildren()) do
+            if child:IsA("Model") then
+                -- Search through the children of the model
+                for _, subchild in ipairs(child:GetChildren()) do
+                      if subchild.Name == "Interactables" then
+                        for _, subsubchild in ipairs(subchild:GetChildren()) do
+                            --print("Obv")
+                                    for _, Fixable in ipairs({
+                                        "EncounterGenerator"
+                                    }) do
+                                        if subsubchild.Name == Fixable then
+                                            --print("22")
+                                        if subsubchild.Name == "EncounterGenerator" then
+                                            --print("11")
+                                        --for _, Suuubchild in ipairs(subsubchild:GetChildren()) do
+                                            --print(Suuubchild)
+                                        local Gen = subsubchild:FindFirstChild("Model")
+                                        --print(Gen)
+                                        if Gen then
+                                            if Gen:FindFirstChild("Outline") then
+                                                Gen:FindFirstChild("Outline"):Destroy()
+                                                Gen:FindFirstChild("LabelAboveItem"):Destroy()
+                                            end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+                -- Recursively search through children of the model
+                DeleteFIXESP1(child)
+            end
+        end
+        end
+    end
+    
+    local function DeleteFIXESP2(parent)
+        for _, child in ipairs(parent:GetChildren()) do
+            if child:IsA("Model") then
+                -- Search through the children of the model
+                for _, subchild in ipairs(child:GetChildren()) do
+                      if subchild.Name == "Interactables" then
+                        for _, subsubchild in ipairs(subchild:GetChildren()) do
+                            --print("Obv")
+                                    for _, Fixable in ipairs({
+                                        "BrokenCables"
+                                    }) do
+                                        if subsubchild.Name == Fixable then
+                                            --print("22")
+                                        if subsubchild.Name == "BrokenCables" then
+                                            --print("11")
+                                        --for _, Suuubchild in ipairs(subsubchild:GetChildren()) do
+                                            --print(Suuubchild)
+                                        local Gen = subsubchild:FindFirstChild("Model")
+                                        --print(Gen)
+                                        if Gen then
+                                            if Gen:FindFirstChild("LabelAboveItem") then
+                                                Gen:FindFirstChild("LabelAboveItem"):Destroy()
+                                                Gen:FindFirstChild("Outline"):Destroy()
+                                            end
+                                        end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+                -- Recursively search through children of the model
+                DeleteFIXESP2(child)
+            end
+        end
+    end
+    
+    local function DeleteITEMESP1(parent)
+        for _, child in ipairs(parent:GetChildren()) do
+            if child:IsA("Model") then
+                -- Search through the children of the model
+                for _, subchild in ipairs(child:GetChildren()) do
+                        -- Search through the children of subchild
+                        for _, subsubchild in ipairs(subchild:GetChildren()) do
+                            -- Check if subsubchild is SpawnLocations
+                            if subsubchild.Name == "SpawnLocations" then
+                                --print("Found SpawnLocations in:", subchild.Name)
+                                for _, spawnItem in ipairs(subsubchild:GetChildren()) do
+                                    for _, itemName in ipairs({
+                                        "Blacklight", "Book", "CodeBreacher", "FlashBeacon",
+                                        "Flashlight", "Gummylight", "NotebookItem", "SmallLantern",
+                                        "SplorgLight", "WindupLight", "BigFlashBeacon", "Lantern",
+                                        "Medkit", "5Currency", "10Currency", "15Currency", "25Currency",
+                                        "50Currency", "100Currency", "200Currency", "NormalKeyCard",
+                                        "InnerKeyCard", "RidgeKeyCard", "DefaultBattery1", "DefaultBattery2",
+                                        "DefaultBattery3", "AltBattery1", "AltBattery2",
+                                        "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon"
+                                    }) do
+                                        local item = spawnItem:FindFirstChild(itemName)
+                                        if item then
+                                            if item:FindFirstChild("LabelAboveItem") then
+                                               item:FindFirstChild("LabelAboveItem"):Destroy()
+                                               item:FindFirstChild("Outline"):Destroy()
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                end
+                -- Recursively search through children of the model
+                DeleteITEMESP1(child)
+            end
+        end
+    end
+    
+    local function DeleteITEMESP2(parent)
+        for _, child in ipairs(parent:GetChildren()) do
+            if child:IsA("Model") then
+                -- Search through the children of the model
+                for _, subchild in ipairs(child:GetChildren()) do
+                    if subchild:IsA("Folder") then
+                        for _, subsubchild in ipairs(subchild:GetChildren()) do
+                            for _, subsubsubchild in ipairs(subsubchild:GetChildren()) do
+                                if subsubsubchild.Name == "SpawnLocations" then
+                                --print("Found SpawnLocations in:", subchild.Name)
+                                for _, spawnItem in ipairs(subsubsubchild:GetChildren()) do
+                                    for _, itemName in ipairs({
+                                        "Blacklight", "Book", "CodeBreacher", "FlashBeacon",
+                                        "Flashlight", "Gummylight", "NotebookItem", "SmallLantern",
+                                        "SplorgLight", "WindupLight", "BigFlashBeacon", "Lantern",
+                                        "Medkit", "5Currency", "10Currency", "15Currency", "25Currency",
+                                        "50Currency", "100Currency", "200Currency", "NormalKeyCard",
+                                        "InnerKeyCard", "RidgeKeyCard", "DefaultBattery1", "DefaultBattery2",
+                                        "DefaultBattery3", "AltBattery1", "AltBattery2",
+                                        "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon"
+                                    }) do
+                                        local item = spawnItem:FindFirstChild(itemName)
+                                        if item then
+                                            --print("Found item:", itemName, "in", spawnItem.Name)
+                                            -- Check if a label already exists
+                                            if item:FindFirstChild("LabelAboveItem") then
+                                                item:FindFirstChild("LabelAboveItem"):Destroy()
+                                                item:FindFirstChild("Outline"):Destroy()
+                                            end
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+                -- Recursively search through children of the model
+                DeleteITEMESP2(child)
+            end
+        end
+    end
+    local ran1 = false
+    local ran2 = false
+
+    local function findturret(parent)
+        for _, rooms in ipairs(parent:GetChildren()) do
+            if rooms:IsA("Model") then
+                for _, roomStuff in ipairs(rooms:GetChildren()) do
+                    if roomStuff.Name == "Interactables" then
+                        for _, interactables2 in ipairs(roomStuff:GetChildren()) do
+                            if interactables2.Name == "TurretSpawn" or "TurretSpawn1" or "TurretSpawn2" or "TurretSpawn3" or "TurretSpawn4" or "TurretSpawn5"  then
+                               for _, turret in ipairs(interactables2:GetChildren()) do
+                                if turret.Name == "Turret" then
+                                    if not turret:FindFirstChild("Outline") then
+                                    local Highlight = Instance.new("Highlight")
+                                    Highlight.Parent = turret
+                                    Highlight.Name = "Outline"
+                                    Highlight.OutlineColor = Color3.new(0,0,0)
+                                    end
+                                  end
+                               end
+                            end
+                        end
+                    end
+                end
+                findturret(rooms)
+            end
+        end
+    end
+
+    local function DeleteTESP(parent)
+        for _, rooms in ipairs(parent:GetChildren()) do
+            if rooms:IsA("Model") then
+                for _, roomStuff in ipairs(rooms:GetChildren()) do
+                    if roomStuff.Name == "Interactables" then
+                        for _, interactables2 in ipairs(roomStuff:GetChildren()) do
+                            if interactables2.Name == "TurretSpawn" or "TurretSpawn1" or "TurretSpawn2" or "TurretSpawn3" or "TurretSpawn4" or "TurretSpawn5"  then
+                                for _, turret in ipairs(interactables2:GetChildren()) do
+                                    if turret.Name == "Turret" then
+                                    if turret:FindFirstChild("Outline") then
+                                        turret:FindFirstChild("Outline"):Destroy()
+                                    end 
+                                end
+                               end
+                            end
+                        end
+                    end
+                end
+                DeleteTESP(rooms)
+            end
+        end
+    end
+    
+    -- Main loop to continuously check entities
+    while true do
+        if Val2 == true then
+            for _, entityName in ipairs(entityNames) do
+                handleMessage(entityName)
+            end
+            local roomsModel = game.Workspace.Rooms
+            highlightEntities(roomsModel)
+            findWallDweller()
+            findturret(roomsModel)
+            ran2 = false
+        elseif Val2 == false then
+            if ran2 == false then
+            local roomsModel22222 = game.Workspace.Rooms
+            DeleteMESP(roomsModel22222)
+            DeleteWDESP()
+            DeleteTESP(roomsModel22222)
+            ran2 = true
+            end
+        end
+        if Val1 == true then
+            recursivelySearchItems()
+            recursivelySearchFixables()
+            ran1 = false
+        elseif Val1 == false then
+            if ran1 == false then
+            local roomsModel11 = game.Workspace.Rooms
+            DeleteITEMESP1(roomsModel11)
+            DeleteITEMESP2(roomsModel11)
+            DeleteFIXESP1(roomsModel11)
+            DeleteFIXESP2(roomsModel11)
+            ran1 = true
+            end
+        end
+    
+        if Val3 == true then
+            recursivelySearchDamageParts()
+        end
+        if Val4 == true then
+            recursivelySearchPrompts()
+        end
+        --checkInteractables(roomsModel)
+        task.wait(1)  -- Adjust wait time as needed
+    end
+    end
