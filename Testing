@@ -2205,7 +2205,6 @@ local function findturret(parent)
                 end
             end
         end
-    end
 
     local function RTripwire()
         for _, areas in ipairs(game.Workspace.Rooms:GetChildren()) do
