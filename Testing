@@ -2169,6 +2169,7 @@ local function findturret(parent)
         for _, Rooms in ipairs(game.Workspace.Rooms:GetChildren()) do
             print(Rooms)
             if Rooms:IsA("Model") then
+                print("Yay")
                 for _, areas2 in ipairs(Rooms:GetChildren()) do
                     if areas2.Name == "Tripwire" then
                         if not areas2:FindFirstChild("ProxyPart"):FindFirstChild("LabelAboveItem") then
