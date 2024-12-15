@@ -2168,6 +2168,67 @@ if game.PlaceId == 12552538292 or 12411473842 then
             end
         end
     end
+
+    local function Ftripwire(parent)
+        for _, areas in ipairs(parent:GetChildren()) do
+            if areas:IsA("Model") then
+                for _, areas2 in ipairs(areas:GetChildren()) do
+                    if areas2.Name == "Tripwire" then
+                        if not areas2:FindFirstChild("ProxyPart"):FindFirstChild("LabelAboveItem") then
+                            -- Example: Adding a BillboardGui for label
+                            local billboard = Instance.new("BillboardGui")
+                            billboard.Parent = areas2:FindFirstChild("ProxyPart")
+                            billboard.Size = UDim2.new(3, 0, 3, 0)
+                            billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset to position above the item
+                            billboard.Name = "LabelAboveItem"
+                            
+                            local Highlight = Instance.new("Highlight")
+                            Highlight.Parent = areas2:FindFirstChild("ProxyPart")
+                            Highlight.Name = "Outline"
+                            Highlight.OutlineColor = Color3.new(0,0,0)
+
+                            -- Customize the label appearance based on item type
+                            local label = Instance.new("TextLabel", billboard)
+                            label.Text = "Tripwire"
+                            label.Size = UDim2.new(1, 0, 1, 0)
+                            label.TextSize = 20
+                            
+                            label.BackgroundTransparency = 1
+                            label.TextScaled = true
+                            label.Visible = true
+                            label.TextStrokeTransparency = 1
+                            label.TextTransparency = 0.2
+                            -- Ensure label is visible through walls
+                            billboard.AlwaysOnTop = true
+                        else
+                            --print("Label already exists for item:", itemName)
+                        end
+                    end
+                end
+                FtripWire(areas)
+            end
+        end
+    end
+
+    local function RTripwire
+        for _, areas in ipairs(parent:GetChildren()) do
+            if areas:IsA("Model") then
+                for _, areas2 in ipairs(areas:GetChildren()) do
+                    if areas2.Name == "Tripwire" then
+                        if areas2:FindFirstChild("ProxyPart"):FindFirstChild("LabelAboveItem") then
+                            local PrxyPart = areas2:FindFirstChild("ProxyPart")
+
+                            PrxyPart:FindFirstChild("LabelAboveItem"):Destroy()
+                            PrxyPart:FindFirstChild("Outline"):Destroy()
+                        else
+                            --print("Label already exists for item:", itemName)
+                        end
+                    end
+                end
+                FtripWire(areas)
+            end
+        end
+    end
     
     -- Main loop to continuously check entities
     while true do
@@ -2179,12 +2240,14 @@ if game.PlaceId == 12552538292 or 12411473842 then
             highlightEntities(roomsModel)
             findWallDweller()
             findturret(roomsModel)
+            FtripwireESP(roomsModel)
             ran2 = false
         elseif Val2 == false then
             if ran2 == false then
             local roomsModel22222 = game.Workspace.Rooms
             DeleteMESP(roomsModel22222)
             DeleteWDESP()
+            RTripwire(roomsModel22222)
             DeleteTESP(roomsModel22222)
             ran2 = true
             end
