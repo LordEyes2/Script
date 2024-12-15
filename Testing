@@ -1291,7 +1291,7 @@ if game.PlaceId == 12552538292 or 12411473842 then
                 Dialouge = "Dang bro is tall!"
                 Notif()
                 local billboard = Instance.new("BillboardGui")
-                billboard.Parent = game.Workspace.A60
+                billboard.Parent = game.Workspace.BigStatue
                 billboard.Size = UDim2.new(8, 0, 8, 0)
                 billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset to position above the item
                 billboard.Name = "LabelAboveMonster"
@@ -1321,7 +1321,7 @@ if game.PlaceId == 12552538292 or 12411473842 then
                 Dialouge = "Keep an eye on him..."
                 Notif()
                 local billboard = Instance.new("BillboardGui")
-                billboard.Parent = game.Workspace.A60
+                billboard.Parent = game.Workspace.Statue
                 billboard.Size = UDim2.new(8, 0, 8, 0)
                 billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset to position above the item
                 billboard.Name = "LabelAboveMonster"
