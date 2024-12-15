@@ -295,7 +295,7 @@ if game.PlaceId == 12552538292 or 12411473842 then
                                                     "DefaultBattery3", "AltBattery1", "AltBattery2",
                                                     "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon", 
                                                     "CuteUmbrella", "DwellerPiece", "Gravelight", "HealthBoost",
-                                                    "SPRINT"
+                                                    "SPRINT", "RedeemerRevolver"
                                                 }) do
                                                     local item = spawnItem:FindFirstChild(itemName)
                                                     --print(distance)
@@ -347,7 +347,7 @@ if game.PlaceId == 12552538292 or 12411473842 then
                                                     "DefaultBattery3", "AltBattery1", "AltBattery2",
                                                     "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon", 
                                                     "CuteUmbrella", "DwellerPiece", "Gravelight", "HealthBoost",
-                                                    "SPRINT"
+                                                    "SPRINT", "RedeemerRevolver"
                                                 }) do
                                                     local item = spawnItem:FindFirstChild(itemName)
                                                     --print(distance)
@@ -889,7 +889,7 @@ if game.PlaceId == 12552538292 or 12411473842 then
     
     
     -- List of entity names to monitor
-    local entityNames = {"Angler", "Chainsmoker", "Pinkie", "Blitz", "Pandemonium", "Eyefestation", "Froger", "RidgeAngler", "RidgeBlitz", "RidgeFroger", "RidgePinkie", "A60"}
+    local entityNames = {"Angler", "Chainsmoker", "Pinkie", "Blitz", "Pandemonium", "Eyefestation", "Froger", "RidgeAngler", "RidgeBlitz", "RidgeFroger", "RidgePinkie", "A60", "BigStatue", "Statue"}
     
     -- Function to check if an entity by name exists in the Workspace
     local function isEntityInWorkspace(entityName)
@@ -910,7 +910,9 @@ if game.PlaceId == 12552538292 or 12411473842 then
         RidgePinkie = false,
         RidgeFroger = false,
         RidgeBlitz = false,
-        A60 = false
+        A60 = false,
+        BigStatue = false,
+        Statue = false
     }
     
     -- Function to handle sending messages for each entity
@@ -1284,6 +1286,66 @@ if game.PlaceId == 12552538292 or 12411473842 then
                 -- Ensure label is visible through walls
                 billboard.AlwaysOnTop = true
                 print("Found A60")
+            elseif entityName == "BigStatue" then
+                Entity = "Big Statue"
+                Dialouge = "Dang bro is tall!"
+                Notif()
+                local billboard = Instance.new("BillboardGui")
+                billboard.Parent = game.Workspace.A60
+                billboard.Size = UDim2.new(8, 0, 8, 0)
+                billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset to position above the item
+                billboard.Name = "LabelAboveMonster"
+                
+                -- Customize the label appearance based on item type
+                local label = Instance.new("TextLabel", billboard)
+                label.Text = Entity
+                label.Size = UDim2.new(1, 0, 1, 0)
+                label.TextSize = 20
+                label.TextColor3 = Color3.new(255, 0, 0)
+    
+                local Highlight = Instance.new("Highlight")
+                Highlight.Parent = game.Workspace:FindFirstChild(entityName)
+                Highlight.Name = "Outline"
+                Highlight.OutlineColor = Color3.new(0,0,0)
+                
+                label.BackgroundTransparency = 1
+                label.TextScaled = true
+                label.Visible = true
+                label.TextStrokeTransparency = 0
+                label.TextTransparency = 0
+                -- Ensure label is visible through walls
+                billboard.AlwaysOnTop = true
+                print("Found BigStatue")
+            elseif entityName == "Statue" then
+                Entity = "Statue"
+                Dialouge = "Keep an eye on him..."
+                Notif()
+                local billboard = Instance.new("BillboardGui")
+                billboard.Parent = game.Workspace.A60
+                billboard.Size = UDim2.new(8, 0, 8, 0)
+                billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset to position above the item
+                billboard.Name = "LabelAboveMonster"
+                
+                -- Customize the label appearance based on item type
+                local label = Instance.new("TextLabel", billboard)
+                label.Text = Entity
+                label.Size = UDim2.new(1, 0, 1, 0)
+                label.TextSize = 20
+                label.TextColor3 = Color3.new(255, 0, 0)
+    
+                local Highlight = Instance.new("Highlight")
+                Highlight.Parent = game.Workspace:FindFirstChild(entityName)
+                Highlight.Name = "Outline"
+                Highlight.OutlineColor = Color3.new(0,0,0)
+                
+                label.BackgroundTransparency = 1
+                label.TextScaled = true
+                label.Visible = true
+                label.TextStrokeTransparency = 0
+                label.TextTransparency = 0
+                -- Ensure label is visible through walls
+                billboard.AlwaysOnTop = true
+                print("Found Statue")
             --end
             end
                 
@@ -1454,7 +1516,7 @@ if game.PlaceId == 12552538292 or 12411473842 then
                                         "DefaultBattery3", "AltBattery1", "AltBattery2",
                                         "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon", 
                                         "CuteUmbrella", "DwellerPiece", "Gravelight", "HealthBoost",
-                                        "SPRINT"
+                                        "SPRINT", "RedeemerRevolver"
                                     }) do
                                         local item = spawnItem:FindFirstChild(itemName)
                                         if item then
@@ -1536,7 +1598,7 @@ if game.PlaceId == 12552538292 or 12411473842 then
                                         "DefaultBattery3", "AltBattery1", "AltBattery2",
                                         "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon", 
                                         "CuteUmbrella", "DwellerPiece", "Gravelight", "HealthBoost",
-                                        "SPRINT"
+                                        "SPRINT", "RedeemerRevolver"
                                     }) do
                                         local item = spawnItem:FindFirstChild(itemName)
                                         if item then
@@ -2052,7 +2114,7 @@ if game.PlaceId == 12552538292 or 12411473842 then
                                         "DefaultBattery3", "AltBattery1", "AltBattery2",
                                         "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon", 
                                         "CuteUmbrella", "DwellerPiece", "Gravelight", "HealthBoost",
-                                        "SPRINT"
+                                        "SPRINT", "RedeemerRevolver"
                                     }) do
                                         local item = spawnItem:FindFirstChild(itemName)
                                         if item then
@@ -2093,7 +2155,7 @@ if game.PlaceId == 12552538292 or 12411473842 then
                                         "DefaultBattery3", "AltBattery1", "AltBattery2",
                                         "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon", 
                                         "CuteUmbrella", "DwellerPiece", "Gravelight", "HealthBoost",
-                                        "SPRINT"
+                                        "SPRINT", "RedeemerRevolver"
                                     }) do
                                         local item = spawnItem:FindFirstChild(itemName)
                                         if item then
