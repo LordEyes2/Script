@@ -2173,6 +2173,7 @@ if game.PlaceId == 12552538292 or 12411473842 then
             if areas:IsA("Model") then
                 for _, areas2 in ipairs(areas:GetChildren()) do
                     if areas2.Name == "Tripwire" then
+                        print(areas2)
                         if not areas2:FindFirstChild("ProxyPart"):FindFirstChild("LabelAboveItem") then
                             -- Example: Adding a BillboardGui for label
                             local billboard = Instance.new("BillboardGui")
