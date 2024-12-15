@@ -1,6 +1,6 @@
 
 --loadstring: loadstring(game:HttpGet("https://raw.githubusercontent.com/LordEyes2/Script/main/PersonalHub"))()
-
+--loadstring Testing: loadstring(game:HttpGet("https://raw.githubusercontent.com/LordEyes2/Script/refs/heads/main/Testing"))()
 --loadstring: loadstring(game:HttpGet("https://pastebin.com/raw/MyhX2sT3"))()
 
 if game.PlaceId == 12552538292 or 12411473842 then
@@ -288,13 +288,15 @@ if game.PlaceId == 12552538292 or 12411473842 then
                                             for _, spawnItem in ipairs(subsubchild:GetChildren()) do
                                                 for _, itemName in ipairs({
                                                     "Blacklight", "Book", "CodeBreacher", "FlashBeacon",
-                                                    "Flashlight", "Gummylight", "NotebookItem", "SmallLantern",
+                                                    "Flashlight", "Gummylight", "Notebook", "SmallLantern",
                                                     "SplorgLight", "WindupLight", "BigFlashBeacon", "Lantern",
                                                     "Medkit", "5Currency", "10Currency", "15Currency", "25Currency",
                                                     "50Currency", "100Currency", "200Currency", "NormalKeyCard",
                                                     "InnerKeyCard", "RidgeKeyCard", "DefaultBattery1", "DefaultBattery2",
                                                     "DefaultBattery3", "AltBattery1", "AltBattery2",
-                                                    "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon"
+                                                    "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon", 
+                                                    "CuteUmbrella", "DwellerPiece", "Gravelight", "HealthBoost",
+                                                    "SPRINT"
                                                 }) do
                                                     local item = spawnItem:FindFirstChild(itemName)
                                                     --print(distance)
@@ -338,13 +340,15 @@ if game.PlaceId == 12552538292 or 12411473842 then
                                             for _, spawnItem in ipairs(subsubsubchild:GetChildren()) do
                                                 for _, itemName in ipairs({
                                                     "Blacklight", "Book", "CodeBreacher", "FlashBeacon",
-                                                    "Flashlight", "Gummylight", "NotebookItem", "SmallLantern",
+                                                    "Flashlight", "Gummylight", "Notebook", "SmallLantern",
                                                     "SplorgLight", "WindupLight", "BigFlashBeacon", "Lantern",
                                                     "Medkit", "5Currency", "10Currency", "15Currency", "25Currency",
                                                     "50Currency", "100Currency", "200Currency", "NormalKeyCard",
                                                     "InnerKeyCard", "RidgeKeyCard", "DefaultBattery1", "DefaultBattery2",
                                                     "DefaultBattery3", "AltBattery1", "AltBattery2",
-                                                    "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon"
+                                                    "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon", 
+                                                    "CuteUmbrella", "DwellerPiece", "Gravelight", "HealthBoost",
+                                                    "SPRINT"
                                                 }) do
                                                     local item = spawnItem:FindFirstChild(itemName)
                                                     --print(distance)
@@ -1443,13 +1447,15 @@ if game.PlaceId == 12552538292 or 12411473842 then
                                 for _, spawnItem in ipairs(subsubchild:GetChildren()) do
                                     for _, itemName in ipairs({
                                         "Blacklight", "Book", "CodeBreacher", "FlashBeacon",
-                                        "Flashlight", "Gummylight", "NotebookItem", "SmallLantern",
+                                        "Flashlight", "Gummylight", "Notebook", "SmallLantern",
                                         "SplorgLight", "WindupLight", "BigFlashBeacon", "Lantern",
                                         "Medkit", "5Currency", "10Currency", "15Currency", "25Currency",
                                         "50Currency", "100Currency", "200Currency", "NormalKeyCard",
                                         "InnerKeyCard", "RidgeKeyCard", "DefaultBattery1", "DefaultBattery2",
                                         "DefaultBattery3", "AltBattery1", "AltBattery2",
-                                        "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon"
+                                        "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon", 
+                                        "CuteUmbrella", "DwellerPiece", "Gravelight", "HealthBoost",
+                                        "SPRINT"
                                     }) do
                                         local item = spawnItem:FindFirstChild(itemName)
                                         if item then
@@ -1523,13 +1529,15 @@ if game.PlaceId == 12552538292 or 12411473842 then
                                 for _, spawnItem in ipairs(subsubsubchild:GetChildren()) do
                                     for _, itemName in ipairs({
                                         "Blacklight", "Book", "CodeBreacher", "FlashBeacon",
-                                        "Flashlight", "Gummylight", "NotebookItem", "SmallLantern",
+                                        "Flashlight", "Gummylight", "Notebook", "SmallLantern",
                                         "SplorgLight", "WindupLight", "BigFlashBeacon", "Lantern",
                                         "Medkit", "5Currency", "10Currency", "15Currency", "25Currency",
                                         "50Currency", "100Currency", "200Currency", "NormalKeyCard",
                                         "InnerKeyCard", "RidgeKeyCard", "DefaultBattery1", "DefaultBattery2",
                                         "DefaultBattery3", "AltBattery1", "AltBattery2",
-                                        "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon"
+                                        "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon", 
+                                        "CuteUmbrella", "DwellerPiece", "Gravelight", "HealthBoost",
+                                        "SPRINT"
                                     }) do
                                         local item = spawnItem:FindFirstChild(itemName)
                                         if item then
@@ -2037,13 +2045,15 @@ if game.PlaceId == 12552538292 or 12411473842 then
                                 for _, spawnItem in ipairs(subsubchild:GetChildren()) do
                                     for _, itemName in ipairs({
                                         "Blacklight", "Book", "CodeBreacher", "FlashBeacon",
-                                        "Flashlight", "Gummylight", "NotebookItem", "SmallLantern",
+                                        "Flashlight", "Gummylight", "Notebook", "SmallLantern",
                                         "SplorgLight", "WindupLight", "BigFlashBeacon", "Lantern",
                                         "Medkit", "5Currency", "10Currency", "15Currency", "25Currency",
                                         "50Currency", "100Currency", "200Currency", "NormalKeyCard",
                                         "InnerKeyCard", "RidgeKeyCard", "DefaultBattery1", "DefaultBattery2",
                                         "DefaultBattery3", "AltBattery1", "AltBattery2",
-                                        "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon"
+                                        "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon", 
+                                        "CuteUmbrella", "DwellerPiece", "Gravelight", "HealthBoost",
+                                        "SPRINT"
                                     }) do
                                         local item = spawnItem:FindFirstChild(itemName)
                                         if item then
@@ -2076,13 +2086,15 @@ if game.PlaceId == 12552538292 or 12411473842 then
                                 for _, spawnItem in ipairs(subsubsubchild:GetChildren()) do
                                     for _, itemName in ipairs({
                                         "Blacklight", "Book", "CodeBreacher", "FlashBeacon",
-                                        "Flashlight", "Gummylight", "NotebookItem", "SmallLantern",
+                                        "Flashlight", "Gummylight", "Notebook", "SmallLantern",
                                         "SplorgLight", "WindupLight", "BigFlashBeacon", "Lantern",
                                         "Medkit", "5Currency", "10Currency", "15Currency", "25Currency",
                                         "50Currency", "100Currency", "200Currency", "NormalKeyCard",
                                         "InnerKeyCard", "RidgeKeyCard", "DefaultBattery1", "DefaultBattery2",
                                         "DefaultBattery3", "AltBattery1", "AltBattery2",
-                                        "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon"
+                                        "AltBattery3", "RoomsBattery", "Relic", "Necrobloxicon", 
+                                        "CuteUmbrella", "DwellerPiece", "Gravelight", "HealthBoost",
+                                        "SPRINT"
                                     }) do
                                         local item = spawnItem:FindFirstChild(itemName)
                                         if item then
