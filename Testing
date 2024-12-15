@@ -2165,8 +2165,8 @@ local function findturret(parent)
         end
     end
 
-    local function Ftripwire(parent)
-        for _, areas in ipairs(parent:GetChildren()) do
+    local function Ftripwire()
+        for _, areas in ipairs(game.Workspace.Rooms:GetChildren()) do
             if areas:IsA("Model") then
                 for _, areas2 in ipairs(areas:GetChildren()) do
                     if areas2.Name == "Tripwire" then
@@ -2175,7 +2175,7 @@ local function findturret(parent)
                             local billboard = Instance.new("BillboardGui")
                             billboard.Parent = areas2:FindFirstChild("ProxyPart")
                             billboard.Size = UDim2.new(3, 0, 3, 0)
-                            billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset to position above the item
+                            billboard.StudsOffset = Vector3.new(0, 0, 0) -- Offset to position above the item
                             billboard.Name = "LabelAboveItem"
                             
                             local Highlight = Instance.new("Highlight")
@@ -2206,8 +2206,8 @@ local function findturret(parent)
         end
     end
 
-    local function RTripwire(parent)
-        for _, areas in ipairs(parent:GetChildren()) do
+    local function RTripwire()
+        for _, areas in ipairs(game.Workspace.Rooms:GetChildren()) do
             if areas:IsA("Model") then
                 for _, areas2 in ipairs(areas:GetChildren()) do
                     if areas2.Name == "Tripwire" then
@@ -2239,14 +2239,14 @@ local function findturret(parent)
             highlightEntities(roomsModel)
             findWallDweller()
             findturret(roomsModel)
-            Ftripwire(roomsModel)
+            Ftripwire()
             ran2 = false
         elseif Val2 == false then
             if ran2 == false then
             local roomsModel22222 = game.Workspace.Rooms
             DeleteMESP(roomsModel22222)
             DeleteWDESP()
-            RTripwire(roomsModel22222)
+            RTripwire()
             DeleteTESP(roomsModel22222)
             ran2 = true
             end
