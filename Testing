@@ -1,4 +1,3 @@
-
 --loadstring: loadstring(game:HttpGet("https://raw.githubusercontent.com/LordEyes2/Script/main/PersonalHub"))()
 --loadstring Testing: loadstring(game:HttpGet("https://raw.githubusercontent.com/LordEyes2/Script/refs/heads/main/Testing"))()
 --loadstring: loadstring(game:HttpGet("https://pastebin.com/raw/MyhX2sT3"))()
@@ -2168,7 +2167,7 @@ if game.PlaceId == 12552538292 or 12411473842 then
             end
         end
     end
---[[
+
     local function Ftripwire(parent)
         for _, areas in ipairs(parent:GetChildren()) do
             if areas:IsA("Model") then
@@ -2210,7 +2209,7 @@ if game.PlaceId == 12552538292 or 12411473842 then
         end
     end
 
-    local function RTripwire
+    local function RTripwire(parent)
         for _, areas in ipairs(parent:GetChildren()) do
             if areas:IsA("Model") then
                 for _, areas2 in ipairs(areas:GetChildren()) do
@@ -2229,7 +2228,7 @@ if game.PlaceId == 12552538292 or 12411473842 then
             end
         end
     end
-    --]]
+
     -- Main loop to continuously check entities
     while true do
         if Val2 == true then
