@@ -889,7 +889,7 @@ if game.PlaceId == 12552538292 or 12411473842 then
     
     
     -- List of entity names to monitor
-    local entityNames = {"Angler", "Chainsmoker", "Pinkie", "Blitz", "Pandemonium", "Eyefestation", "Froger", "RidgeAngler", "RidgeBlitz", "RidgeFroger", "RidgePinkie", "A60", "BigStatue", "Statue"}
+    local entityNames = {"Angler", "Chainsmoker", "Pinkie", "Blitz", "Pandemonium", "Eyefestation", "Froger", "RidgeAngler", "RidgeBlitz", "RidgeFroger", "RidgePinkie", "A60", "BiggerStatue", "Statue"}
     
     -- Function to check if an entity by name exists in the Workspace
     local function isEntityInWorkspace(entityName)
@@ -911,7 +911,7 @@ if game.PlaceId == 12552538292 or 12411473842 then
         RidgeFroger = false,
         RidgeBlitz = false,
         A60 = false,
-        BigStatue = false,
+        BiggerStatue = false,
         Statue = false
     }
     
@@ -1286,8 +1286,8 @@ if game.PlaceId == 12552538292 or 12411473842 then
                 -- Ensure label is visible through walls
                 billboard.AlwaysOnTop = true
                 print("Found A60")
-            elseif entityName == "BigStatue" then
-                Entity = "Big Statue"
+            elseif entityName == "BiggerStatue" then
+                Entity = "Statue"
                 Dialouge = "Dang bro is tall!"
                 Notif()
                 local billboard = Instance.new("BillboardGui")
