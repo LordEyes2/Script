@@ -2239,14 +2239,14 @@ if game.PlaceId == 12552538292 or 12411473842 then
             highlightEntities(roomsModel)
             findWallDweller()
             findturret(roomsModel)
-            --FtripwireESP(roomsModel)
+            FtripwireESP(roomsModel)
             ran2 = false
         elseif Val2 == false then
             if ran2 == false then
             local roomsModel22222 = game.Workspace.Rooms
             DeleteMESP(roomsModel22222)
             DeleteWDESP()
-            --RTripwire(roomsModel22222)
+            RTripwire(roomsModel22222)
             DeleteTESP(roomsModel22222)
             ran2 = true
             end
