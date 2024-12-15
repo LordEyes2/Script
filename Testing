@@ -2116,10 +2116,7 @@ if game.PlaceId == 12552538292 or 12411473842 then
             end
         end
     end
-    local ran1 = false
-    local ran2 = false
-
-    local function findturret(parent)
+local function findturret(parent)
         for _, rooms in ipairs(parent:GetChildren()) do
             if rooms:IsA("Model") then
                 for _, roomStuff in ipairs(rooms:GetChildren()) do
@@ -2228,6 +2225,9 @@ if game.PlaceId == 12552538292 or 12411473842 then
             end
         end
     end
+
+    local ran1 = false
+    local ran2 = false
 
     -- Main loop to continuously check entities
     while true do
