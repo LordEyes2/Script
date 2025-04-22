@@ -314,11 +314,11 @@ findstats(folder)
 
 -- Update the dropdown when players join or leave
 Players.PlayerAdded:Connect(function()
-   Dropdown:Refresh(getPlayerNames())
+   Dropdown:Set(getPlayerNames())
 end)
 
 Players.PlayerRemoving:Connect(function()
-   Dropdown:Refresh(getPlayerNames())
+   Dropdown:Set(getPlayerNames())
 end)
 
 -- Section 2 --
@@ -660,11 +660,11 @@ local Dropdown2 = Tab3:CreateDropdown({
 })
 
 Players.PlayerAdded:Connect(function()
-   Dropdown2:Refresh(getPlayerNames())
+   Dropdown2:Set(getPlayerNames())
 end)
 
 Players.PlayerRemoving:Connect(function()
-   Dropdown2:Refresh(getPlayerNames())
+   Dropdown2:Set(getPlayerNames())
 end)
 
 
