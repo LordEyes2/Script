@@ -604,7 +604,7 @@ local InventoryList = Tab3:CreateParagraph({
     Content = "No player selected.",
 })
 
-Tab3:CreateDropdown({
+local Dropdown2 = Tab3:CreateDropdown({
  Name = "Select Player",
     Options = getPlayerNames(),
     CurrentOption = "",
@@ -658,5 +658,13 @@ Tab3:CreateDropdown({
         end
     end
 })
+
+Players.PlayerAdded:Connect(function()
+   Dropdown2:Refresh(getPlayerNames())
+end)
+
+Players.PlayerRemoving:Connect(function()
+   Dropdown2:Refresh(getPlayerNames())
+end)
 
 
