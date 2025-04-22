@@ -46,11 +46,18 @@ local Section2 = Tab2:CreateSection("Re-Execute It If It Keeps Swapping")
 -- Section 1 --
 
 local function getPlayerNames()
-   local names = {}
-   for _, player in ipairs(Players:GetPlayers()) do
-      table.insert(names, player.Name)
-   end
-   return names
+    local names = {}
+    local localPlayerName = Players.LocalPlayer.Name
+
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player.Name ~= localPlayerName then
+            table.insert(names, player.Name)
+        end
+    end
+
+    table.insert(names, localPlayerName) -- Add LocalPlayer at the bottom
+
+    return names
 end
 
 
