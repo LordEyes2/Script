@@ -76,7 +76,8 @@ local Dropdown = Tab:CreateDropdown({
 local Button = Tab:CreateButton({
    Name = "Execute",
    Callback = function()
-   local user = tostring(suser)
+   local user = user
+print(suser)
 local findhunger = true
 local findrank = true
 local folder = game.Workspace:FindFirstChild("Entities")
