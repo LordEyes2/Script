@@ -46,19 +46,54 @@ local Section2 = Tab2:CreateSection("Re-Execute It If It Keeps Swapping")
 -- Section 1 --
 
 local function getPlayerNames()
-    local names = {}
+    local ccgNames = {}
+    local ghoulNames = {}
     local localPlayerName = Players.LocalPlayer.Name
+    local folder = game.Workspace:FindFirstChild("Entities")
 
     for _, player in ipairs(Players:GetPlayers()) do
-        if player.Name ~= localPlayerName then
-            table.insert(names, player.Name)
+        if folder then
+            local entity = folder:FindFirstChild(player.Name)
+            if entity then
+                local race = entity:FindFirstChild("Race")
+                if race then
+                    local raceVal = string.lower(race.Value)
+                    if raceVal == "ghoul" then
+                        table.insert(ghoulNames, player.Name)
+                    else
+                        table.insert(ccgNames, player.Name)
+                    end
+                else
+                    table.insert(ccgNames, player.Name) -- default fallback
+                end
+            else
+                table.insert(ccgNames, player.Name) -- if no entity exists
+            end
+        else
+            table.insert(ccgNames, player.Name) -- if Entities folder missing
         end
     end
 
-    table.insert(names, localPlayerName) -- Add LocalPlayer at the bottom
+    table.insert(ccgNames, localPlayerName) -- Add local player to CCG by default if not found
+
+    -- Combine lists and label them
+    local names = {}
+    if #ccgNames > 0 then
+        table.insert(names, "--- CCG ---")
+        for _, name in ipairs(ccgNames) do
+            table.insert(names, name)
+        end
+    end
+    if #ghoulNames > 0 then
+        table.insert(names, "--- Ghouls ---")
+        for _, name in ipairs(ghoulNames) do
+            table.insert(names, name)
+        end
+    end
 
     return names
 end
+
 
 local suser = nil
 
