@@ -1,0 +1,662 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local Player = game.Players.LocalPlayer
+local Players = game:GetService("Players")
+
+local Window = Rayfield:CreateWindow({
+   Name = "Personal Hub",
+   Icon = 0,
+   LoadingTitle = "Loading Script...",
+   LoadingSubtitle = "by Lord_Eyes",
+   Theme = "Ocean",
+
+   DisableRayfieldPrompts = false,
+   DisableBuildWarnings = false,
+
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = nil,
+      FileName = "Big Hub"
+   },
+
+   Discord = {
+      Enabled = false,
+      Invite = "noinvitelink",
+      RememberJoins = true
+   },
+
+   KeySystem = false,
+   KeySettings = {
+      Title = "Untitled",
+      Subtitle = "Key System",
+      Note = "No method of obtaining the key is provided",
+      FileName = "Key",
+      SaveKey = true,
+      GrabKeyFromSite = false,
+      Key = {"Hello"}
+   }
+})
+
+local Tab = Window:CreateTab("Selection", 4483362458)
+local Tab2 = Window:CreateTab("Automatic", 4483362458)
+local Tab3 = Window:CreateTab("Inventory", 4483362458)
+
+local Section = Tab:CreateSection("Select The User You Want Simple Shit Bro")
+local Section2 = Tab2:CreateSection("Re-Execute It If It Keeps Swapping")
+
+-- Section 1 --
+
+local function getPlayerNames()
+   local names = {}
+   for _, player in ipairs(Players:GetPlayers()) do
+      table.insert(names, player.Name)
+   end
+   return names
+end
+
+
+local Dropdown = Tab:CreateDropdown({
+   Name = "Select a Player",
+   Options = getPlayerNames(),
+   CurrentOption = {"None"},
+   MultipleOptions = false,
+   Flag = "Dropdown1",
+   Callback = function(Options)
+      print("Selected player: " .. Options[1])
+      local user = Options[1]
+local findhunger = true
+local findrank = true
+local folder = game.Workspace:FindFirstChild("Entities")
+
+local existingGui = game.Players.LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("Main")
+if existingGui then
+    existingGui:Destroy()
+end
+
+for _, entity in ipairs(folder:GetChildren()) do
+    local existingHighlight = entity:FindFirstChild("Highlight")
+    if existingHighlight then
+        existingHighlight:Destroy()
+    end
+    local head = entity:FindFirstChild("Head")
+    if head then
+        local existingBillboard = head:FindFirstChild("StatDisplay")
+        if existingBillboard then
+            existingBillboard:Destroy()
+        end
+    end
+end
+
+local Gui = Instance.new("ScreenGui")
+Gui.Name = "Main"
+Gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+local Frame = Instance.new("Frame")
+Frame.Parent = Gui
+Frame.Size = UDim2.new(0.25, 0, 0.25, 0)
+Frame.Position = UDim2.new(0.05, 0, 0.05, 0)
+Frame.BackgroundTransparency = 0.7
+
+local TextLabel = Instance.new("TextLabel")
+TextLabel.Parent = Frame
+TextLabel.Size = UDim2.new(1, 0, 1, 0)
+TextLabel.TextScaled = true
+TextLabel.TextWrapped = true
+TextLabel.Text = "Loading stats..."
+TextLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel.BackgroundTransparency = 1
+
+local CCGranks = {
+    "Rank 3", "Rank 2", "Rank 1", "Second Class", "Semi-Associate",
+    "Associate Second", "Associate First", "First Class", "Associate Special", "Special Class"
+}
+
+local Ghoulranks = {
+    "C", "B", "B+", "A", "A+", "S", "S+", "SS", "SS+", "SSS"
+}
+
+local function updateStats(entity)
+    local displayText = "Stats for " .. user .. ":\n\n"
+
+    local race = entity:FindFirstChild("Race")
+    local raceValue = race and race.Value or "Unknown"
+    displayText = displayText .. "Race: " .. raceValue .. "\n"
+
+    local humanoid = entity:FindFirstChild("Humanoid")
+    if humanoid then
+        displayText = displayText .. "Health: " .. math.floor(humanoid.Health) .. "/" .. math.floor(humanoid.MaxHealth) .. "\n"
+    end
+
+    if entity:GetAttribute("RCCells") then
+        displayText = displayText .. "RC Cells: " .. math.ceil(entity:GetAttribute("RCCells")) .. "\n"
+    end
+
+    if findhunger then
+        local hunger = entity:FindFirstChild("Hunger")
+        if hunger then
+            local maxHunger = hunger:GetAttribute("MaxValue") or "?"
+            displayText = displayText .. "Hunger: " .. hunger.Value .. "/" .. maxHunger .. "\n"
+        end
+    end
+
+    if findrank then
+        local rank = entity:FindFirstChild("Rank")
+        if rank then
+            local rankValue = tonumber(rank.Value)
+            local rankName
+
+            if string.lower(raceValue) == "ghoul" then
+                rankName = Ghoulranks[rankValue] or "Unknown Ghoul Rank"
+            else
+                rankName = CCGranks[rankValue] or "Unknown CCG Rank"
+            end
+
+            displayText = displayText .. "Rank: " .. rankName .. " (" .. rankValue .. ")\n"
+        end
+    end
+
+    if string.lower(raceValue) == "ghoul" then
+        local currentStage = entity:GetAttribute("CurrentStage")
+        displayText = displayText .. "Stage: " .. (currentStage or "Unknown") .. "\n"
+    end
+
+    local weaponType = entity:GetAttribute("WeaponType")
+    if weaponType then
+        if string.lower(raceValue) == "ghoul" then
+            displayText = displayText .. "Weapon: " .. weaponType
+        else
+            local currentUpgrade = entity:GetAttribute("CurrentUpgrade")
+            if currentUpgrade == "1" then
+                weaponType = weaponType .. " V1"
+            elseif currentUpgrade == "2" then
+                weaponType = weaponType .. " V2"
+            end
+            displayText = displayText .. "Weapon: " .. weaponType .. " V" .. currentUpgrade
+        end
+    else
+        displayText = displayText .. "Weapon: None\n"
+    end
+
+    TextLabel.Text = displayText
+end
+
+local function monitorStats(entity)
+    updateStats(entity)
+
+    local race = entity:FindFirstChild("Race")
+    local raceValue = race and race.Value or "Unknown"
+    local isGhoul = string.lower(raceValue) == "ghoul"
+    local humanoid = entity:FindFirstChild("Humanoid")
+    local hunger = entity:FindFirstChild("Hunger")
+
+    -- === Create Overhead Billboard Label ===
+    local head = entity:FindFirstChild("Head")
+    if head then
+        local billboard = Instance.new("BillboardGui")
+        billboard.Name = "StatDisplay"
+        billboard.Size = UDim2.new(0, 200, 0, 50)
+        billboard.StudsOffset = Vector3.new(0, 2.5, 0)
+        billboard.AlwaysOnTop = true
+        billboard.MaxDistance = math.huge
+        billboard.Adornee = head
+        billboard.Parent = head
+
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(1, 0, 1, 0)
+        label.BackgroundTransparency = 1
+        label.TextScaled = true
+        label.TextColor3 = Color3.fromRGB(255, 255, 255)
+        label.Font = Enum.Font.SourceSansBold
+        label.TextStrokeTransparency = 0.5
+        label.Parent = billboard
+
+        local function updateBillboard()
+            local health = "?"
+            local maxHealth = "?"
+            local hungerText = ""
+
+            if humanoid then
+                health = math.floor(humanoid.Health)
+                maxHealth = math.floor(humanoid.MaxHealth)
+            end
+
+            if isGhoul and hunger then
+                hungerText = " | Hunger: " .. hunger.Value
+            end
+
+            label.Text = entity.Name .. " | " .. health .. "/" .. maxHealth .. hungerText
+        end
+
+        updateBillboard()
+
+        if humanoid then
+            humanoid:GetPropertyChangedSignal("Health"):Connect(updateBillboard)
+            humanoid:GetPropertyChangedSignal("MaxHealth"):Connect(updateBillboard)
+        end
+        if isGhoul and hunger then
+            hunger:GetPropertyChangedSignal("Value"):Connect(updateBillboard)
+        end
+    end
+
+    if humanoid then
+        humanoid:GetPropertyChangedSignal("Health"):Connect(function()
+            updateStats(entity)
+        end)
+        humanoid:GetPropertyChangedSignal("MaxHealth"):Connect(function()
+            updateStats(entity)
+        end)
+    end
+
+    entity:GetAttributeChangedSignal("RCCells"):Connect(function()
+        updateStats(entity)
+    end)
+
+    if findhunger and hunger then
+        hunger:GetPropertyChangedSignal("Value"):Connect(function()
+            updateStats(entity)
+        end)
+        hunger:GetAttributeChangedSignal("MaxValue"):Connect(function()
+            updateStats(entity)
+        end)
+    end
+
+    if findrank then
+        local rank = entity:FindFirstChild("Rank")
+        if rank then
+            rank:GetPropertyChangedSignal("Value"):Connect(function()
+                updateStats(entity)
+            end)
+        end
+    end
+
+    if race then
+        race:GetPropertyChangedSignal("Value"):Connect(function()
+            updateStats(entity)
+        end)
+    end
+
+    if entity:GetAttribute("WeaponType") then
+        entity:GetAttributeChangedSignal("WeaponType"):Connect(function()
+            updateStats(entity)
+        end)
+    end
+
+    if entity:GetAttribute("CurrentUpgrade") then
+        entity:GetAttributeChangedSignal("CurrentUpgrade"):Connect(function()
+            updateStats(entity)
+        end)
+    end
+
+    if entity:GetAttribute("CurrentStage") then
+        entity:GetAttributeChangedSignal("CurrentStage"):Connect(function()
+            updateStats(entity)
+        end)
+    end
+end
+
+local function findstats(entities)
+    for _, entity in ipairs(entities:GetChildren()) do
+        if entity.Name == user then
+            print("Found username")
+
+            local highlight = Instance.new("Highlight")
+            highlight.Name = "Highlight"
+            highlight.Parent = entity
+
+            monitorStats(entity)
+            break
+        end
+    end
+end
+
+findstats(folder)
+   end,
+})
+
+-- Update the dropdown when players join or leave
+Players.PlayerAdded:Connect(function()
+   Dropdown:Refresh(getPlayerNames())
+end)
+
+Players.PlayerRemoving:Connect(function()
+   Dropdown:Refresh(getPlayerNames())
+end)
+
+-- Section 2 --
+
+local Button = Tab2:CreateButton({
+   Name = "Execute Automatic Script",
+   Callback = function()
+   local staticUser = "Don't Use this" -- Don't use it (Shit aint wanna work normally)
+local user = staticUser
+local findhunger = true
+local findrank = true
+local Fighting = true -- If true shows stats of the person who hit you
+local folder = game.Workspace:FindFirstChild("Entities")
+local currentEntity = nil
+
+local existingGui = game.Players.LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("Main")
+if existingGui then
+    existingGui:Destroy()
+end
+
+local Gui = Instance.new("ScreenGui")
+Gui.Name = "Main"
+Gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+Gui.ResetOnSpawn = false
+
+local Frame = Instance.new("Frame")
+Frame.Parent = Gui
+Frame.Size = UDim2.new(0.25, 0, 0.25, 0)
+Frame.Position = UDim2.new(0.05, 0, 0.05, 0)
+Frame.BackgroundTransparency = 0.7
+
+local TextLabel = Instance.new("TextLabel")
+TextLabel.Parent = Frame
+TextLabel.Size = UDim2.new(1, 0, 1, 0)
+TextLabel.TextScaled = true
+TextLabel.TextWrapped = true
+TextLabel.Text = "Loading stats..."
+TextLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel.BackgroundTransparency = 1
+
+local CCGranks = {
+    "Rank 3", "Rank 2", "Rank 1", "Second Class", "Semi-Associate",
+    "Associate Second", "Associate First", "First Class", "Associate Special", "Special Class"
+}
+
+local Ghoulranks = {
+    "C", "B", "B+", "A", "A+", "S", "S+", "SS", "SS+", "SSS"
+}
+
+local function updateStats(entity)
+    local displayText = "Stats for " .. user .. ":\n\n"
+
+    local race = entity:FindFirstChild("Race")
+    local raceValue = race and race.Value or "Unknown"
+    displayText = displayText .. "Race: " .. raceValue .. "\n"
+
+    local humanoid = entity:FindFirstChild("Humanoid")
+    if humanoid then
+        displayText = displayText .. "Health: " .. math.floor(humanoid.Health) .. "/" .. math.floor(humanoid.MaxHealth) .. "\n"
+    end
+
+    if entity:GetAttribute("RCCells") then
+        displayText = displayText .. "RC Cells: " .. math.ceil(entity:GetAttribute("RCCells")) .. "\n"
+    end
+
+    if findhunger then
+        local hunger = entity:FindFirstChild("Hunger")
+        if hunger then
+            local maxHunger = hunger:GetAttribute("MaxValue") or "?"
+            displayText = displayText .. "Hunger: " .. hunger.Value .. "/" .. maxHunger .. "\n"
+        end
+    end
+
+    if findrank then
+        local rank = entity:FindFirstChild("Rank")
+        if rank then
+            local rankValue = tonumber(rank.Value)
+            local rankName
+
+            if string.lower(raceValue) == "ghoul" then
+                rankName = Ghoulranks[rankValue] or "Unknown Ghoul Rank"
+            else
+                rankName = CCGranks[rankValue] or "Unknown CCG Rank"
+            end
+
+            displayText = displayText .. "Rank: " .. rankName .. " (" .. rankValue .. ")\n"
+        end
+    end
+
+    if string.lower(raceValue) == "ghoul" then
+        local currentStage = entity:GetAttribute("CurrentStage")
+        displayText = displayText .. "Stage: " .. (currentStage or "Unknown") .. "\n"
+    end
+
+    local weaponType = entity:GetAttribute("WeaponType")
+    if weaponType then
+        if string.lower(raceValue) == "ghoul" then
+            displayText = displayText .. "Weapon: " .. weaponType
+        else
+            local currentUpgrade = entity:GetAttribute("CurrentUpgrade")
+            if currentUpgrade == "1" then
+                weaponType = weaponType .. " V1"
+            elseif currentUpgrade == "2" then
+                weaponType = weaponType .. " V2"
+            end
+            displayText = displayText .. "Weapon: " .. weaponType .. " V" .. currentUpgrade
+        end
+    else
+        displayText = displayText .. "Weapon: None\n"
+    end
+
+    TextLabel.Text = displayText
+end
+
+local function monitorStats(entity)
+    updateStats(entity)
+
+    local race = entity:FindFirstChild("Race")
+    local raceValue = race and race.Value or "Unknown"
+    local isGhoul = string.lower(raceValue) == "ghoul"
+    local humanoid = entity:FindFirstChild("Humanoid")
+    local hunger = entity:FindFirstChild("Hunger")
+
+    local head = entity:FindFirstChild("Head")
+    if head then
+        local billboard = Instance.new("BillboardGui")
+        billboard.Name = "StatDisplay"
+        billboard.Size = UDim2.new(0, 200, 0, 50)
+        billboard.StudsOffset = Vector3.new(0, 2.5, 0)
+        billboard.AlwaysOnTop = true
+        billboard.MaxDistance = math.huge
+        billboard.Adornee = head
+        billboard.Parent = head
+
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(1, 0, 1, 0)
+        label.BackgroundTransparency = 1
+        label.TextScaled = true
+        label.TextColor3 = Color3.fromRGB(255, 255, 255)
+        label.Font = Enum.Font.SourceSansBold
+        label.TextStrokeTransparency = 0.5
+        label.Parent = billboard
+
+        local function updateBillboard()
+            local health = "?"
+            local maxHealth = "?"
+            local hungerText = ""
+
+            if humanoid then
+                health = math.floor(humanoid.Health)
+                maxHealth = math.floor(humanoid.MaxHealth)
+            end
+
+            if isGhoul and hunger then
+                hungerText = " | Hunger: " .. hunger.Value
+            end
+
+            label.Text = entity.Name .. " | " .. health .. "/" .. maxHealth .. hungerText
+        end
+
+        updateBillboard()
+
+        if humanoid then
+            humanoid:GetPropertyChangedSignal("Health"):Connect(updateBillboard)
+            humanoid:GetPropertyChangedSignal("MaxHealth"):Connect(updateBillboard)
+        end
+
+        if isGhoul and hunger then
+            hunger:GetPropertyChangedSignal("Value"):Connect(updateBillboard)
+        end
+    end
+
+    if humanoid then
+        humanoid:GetPropertyChangedSignal("Health"):Connect(function()
+            updateStats(entity)
+        end)
+        humanoid:GetPropertyChangedSignal("MaxHealth"):Connect(function()
+            updateStats(entity)
+        end)
+    end
+
+    entity:GetAttributeChangedSignal("RCCells"):Connect(function()
+        updateStats(entity)
+    end)
+
+    if findhunger and hunger then
+        hunger:GetPropertyChangedSignal("Value"):Connect(function()
+            updateStats(entity)
+        end)
+        hunger:GetAttributeChangedSignal("MaxValue"):Connect(function()
+            updateStats(entity)
+        end)
+    end
+
+    if findrank then
+        local rank = entity:FindFirstChild("Rank")
+        if rank then
+            rank:GetPropertyChangedSignal("Value"):Connect(function()
+                updateStats(entity)
+            end)
+        end
+    end
+
+    if race then
+        race:GetPropertyChangedSignal("Value"):Connect(function()
+            updateStats(entity)
+        end)
+    end
+
+    if entity:GetAttribute("WeaponType") then
+        entity:GetAttributeChangedSignal("WeaponType"):Connect(function()
+            updateStats(entity)
+        end)
+    end
+
+    if entity:GetAttribute("CurrentUpgrade") then
+        entity:GetAttributeChangedSignal("CurrentUpgrade"):Connect(function()
+            updateStats(entity)
+        end)
+    end
+
+    if entity:GetAttribute("CurrentStage") then
+        entity:GetAttributeChangedSignal("CurrentStage"):Connect(function()
+            updateStats(entity)
+        end)
+    end
+end
+
+local function highlightAndMonitor(targetName)
+    for _, entity in ipairs(folder:GetChildren()) do
+        local highlight = entity:FindFirstChild("Highlight")
+        if highlight then highlight:Destroy() end
+
+        local head = entity:FindFirstChild("Head")
+        if head then
+            local tag = head:FindFirstChild("StatDisplay")
+            if tag then tag:Destroy() end
+        end
+    end
+
+    for _, entity in ipairs(folder:GetChildren()) do
+        if entity.Name == targetName then
+            user = targetName
+            currentEntity = entity
+
+            local highlight = Instance.new("Highlight")
+            highlight.Name = "Highlight"
+            highlight.Parent = entity
+
+            monitorStats(entity)
+            break
+        end
+    end
+end
+
+local function startTrackingEnemy()
+    local lp = game.Players.LocalPlayer
+    local char = lp.Character or lp.CharacterAdded:Wait()
+
+    local function updateTarget()
+        local tag = char:GetAttribute("HighestTagEnemy")
+        if tag and tag ~= user then
+            highlightAndMonitor(tag)
+        end
+    end
+
+    updateTarget()
+    char:GetAttributeChangedSignal("HighestTagEnemy"):Connect(updateTarget)
+end
+
+if Fighting then
+    startTrackingEnemy()
+else
+    highlightAndMonitor(staticUser)
+end
+   end,
+})
+
+-- Section 3 --
+
+local InventoryList = Tab3:CreateParagraph({
+    Title = "Selected Player's Inventory",
+    Content = "No player selected.",
+})
+
+Tab3:CreateDropdown({
+ Name = "Select Player",
+    Options = getPlayerNames(),
+    CurrentOption = "",
+    Flag = "InventoryPlayerDropdown",
+    Callback = function(playerName)
+        local selectedPlayer = Players:FindFirstChild(playerName[1])
+        if selectedPlayer then
+            local itemCount = {}  -- Table to store item counts
+
+            -- Get tools from Backpack
+            local backpack = selectedPlayer:FindFirstChildOfClass("Backpack")
+            if backpack then
+                for _, tool in ipairs(backpack:GetChildren()) do
+                    if tool:IsA("Tool") and tool:FindFirstChild("Quantity") then
+                        local amountValue = tool:FindFirstChild("Quantity")
+                        if amountValue and amountValue:IsA("IntValue") then
+                            local amount = amountValue.Value
+                            -- Count the item using its Amount property
+                            itemCount[tool.Name] = (itemCount[tool.Name] or 0) + amount
+                        end
+                    end
+                end
+            end
+
+            -- Get equipped tools
+            local character = selectedPlayer.Character
+            if character then
+                for _, tool in ipairs(character:GetChildren()) do
+                    if tool:IsA("Tool") and tool:FindFirstChild("Amount") then
+                        local amountValue = tool:FindFirstChild("Amount")
+                        if amountValue and amountValue:IsA("IntValue") then
+                            local amount = amountValue.Value
+                            -- Count the item using its Amount property
+                            itemCount[tool.Name] = (itemCount[tool.Name] or 0) + amount
+                        end
+                    end
+                end
+            end
+
+            -- Prepare the list of items with counts
+            local items = {}
+            for itemName, count in pairs(itemCount) do
+                table.insert(items, itemName .. " x" .. tostring(count))  -- Ensure count is a string
+            end
+
+            -- If no items, display a message
+            local contentString = #items > 0 and table.concat(items, "\n")
+            InventoryList:Set({Title = "Selected Player's Inventory", Content = contentString })
+        else
+            InventoryList:Set({ Content = "Player not found." })
+        end
+    end
+})
+
+
