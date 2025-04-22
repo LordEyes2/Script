@@ -60,6 +60,7 @@ local function getPlayerNames()
     return names
 end
 
+local suser = nil
 
 local Dropdown = Tab:CreateDropdown({
    Name = "Select a Player",
@@ -69,15 +70,14 @@ local Dropdown = Tab:CreateDropdown({
    Flag = "Dropdown1",
    Callback = function(Options)
       print("Selected player: " .. Options[1])
-      local suser = Options[1]
+      suser = Options[1]
    end,
 })
 
 local Button = Tab:CreateButton({
    Name = "Execute",
    Callback = function()
-   local user = user
-print(suser)
+   local user = suser
 local findhunger = true
 local findrank = true
 local folder = game.Workspace:FindFirstChild("Entities")
