@@ -39,6 +39,7 @@ local Window = Rayfield:CreateWindow({
 local Tab = Window:CreateTab("Selection", 4483362458)
 local Tab2 = Window:CreateTab("Automatic", 4483362458)
 local Tab3 = Window:CreateTab("Inventory", 4483362458)
+local Tab4 = Window:CreateTab("Settings", 4483362458)
 
 local Section = Tab:CreateSection("Select The User You Want Simple Shit Bro")
 local Section2 = Tab2:CreateSection("Re-Execute It If It Keeps Swapping")
@@ -97,6 +98,7 @@ end
 
 local suser = nil
 
+
 local Dropdown = Tab:CreateDropdown({
    Name = "Select a Player",
    Options = getPlayerNames(),
@@ -106,6 +108,13 @@ local Dropdown = Tab:CreateDropdown({
    Callback = function(Options)
       print("Selected player: " .. Options[1])
       suser = Options[1]
+   end,
+})
+
+local ButtonIdk = Tab:CreateButton({
+   Name = "Refresh",
+   Callback = function()
+   Dropdown:Refresh(getPlayerNames())
    end,
 })
 
@@ -361,15 +370,6 @@ end
 findstats(folder)
    end,
 })
-
--- Update the dropdown when players join or leave
-Players.PlayerAdded:Connect(function()
-   Dropdown:Set(getPlayerNames())
-end)
-
-Players.PlayerRemoving:Connect(function()
-   Dropdown:Set(getPlayerNames())
-end)
 
 -- Section 2 --
 
@@ -709,12 +709,9 @@ local Dropdown2 = Tab3:CreateDropdown({
     end
 })
 
-Players.PlayerAdded:Connect(function()
-   Dropdown2:Set(getPlayerNames())
-end)
-
-Players.PlayerRemoving:Connect(function()
-   Dropdown2:Set(getPlayerNames())
-end)
-
-
+local ButtonIdkk = Tab3:CreateButton({
+   Name = "Refresh",
+   Callback = function()
+   Dropdown2:Refresh(getPlayerNames())
+   end,
+})
