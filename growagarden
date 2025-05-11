@@ -111,6 +111,7 @@ local Toggle23 = Event:CreateToggle({
                                else
                                    roots = plantType:GetChildren() -- Use direct children if no Fruits folder
                                    --print("🟠 No Fruits folder, using direct children for", plantType.Name)
+                                   
                                end
 
                                -- Loop through roots (fruits or direct children)
@@ -119,7 +120,12 @@ local Toggle23 = Event:CreateToggle({
                                    --print("🔍 Checking fruit:", fruit.Name)
 
                                    -- Check if the Moonlit attribute is on the fruit model itself (not descendants)
-                                   local isMoonlit = plantType:GetAttribute("Moonlit")
+                                   local isMoonlit = nil
+                                   if not fruits then
+                                    isMoonlit = plantType:GetAttribute("Moonlit")
+                                    else
+                                    isMoonlit = fruit:GetAttribute("Moonlit")
+                                    end
                                    if isMoonlit == true then
                                        --print("🌙 Found Moonlit fruit:", fruit.Name)
                                             Rayfield:Notify({
