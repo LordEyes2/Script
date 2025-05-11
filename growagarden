@@ -36,6 +36,7 @@ local Window = Rayfield:CreateWindow({
 
 local OwnerName = game.Players.LocalPlayer.Character
 local Player = game.Players.LocalPlayer
+local Char = game.Players.LocalPlayer.Character
 local OwnerPlot = nil
 local function findOwner()
     for _, child in ipairs(game.Workspace.Farm:GetChildren()) do
@@ -138,6 +139,8 @@ local Toggle23 = Event:CreateToggle({
                                        local foundPrompt = false
                                        for _, descendant in ipairs(fruit:GetDescendants()) do
                                            if descendant:IsA("ProximityPrompt") then
+
+                                            Char.HumanoidRootPart.CFrame = descendant.Parent.CFrame
                                                fireproximityprompt(descendant)
                                                print("🌙 Collected Moonlit item:", fruit.Name, "via", descendant:GetFullName())
                                                foundPrompt = true
@@ -178,6 +181,7 @@ local Toggle73 = Event:CreateToggle({
 
        if collectMoonlitTurnIn then
            task.spawn(function()
+           while collectMoonlitTurnIn do
                local questEvent = game:GetService("ReplicatedStorage")
                                    :WaitForChild("GameEvents")
                                    :WaitForChild("NightQuestRemoteEvent")
@@ -196,7 +200,7 @@ local Toggle73 = Event:CreateToggle({
                                end
 
                                -- Submit it
-                               questEvent:FireServer("SubmitHeldPlant")
+                               questEvent:FireServer("SubmitAllPlants")
                                print("🌙 Submitted Moonlit item:", item.Name)
 
                                submitted = true
@@ -217,6 +221,8 @@ local Toggle73 = Event:CreateToggle({
                end
 
                print("⛔ Turn In Moonlit stopped.")
+               wait(1)
+               end
            end)
        end
    end,
