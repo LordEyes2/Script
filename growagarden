@@ -69,6 +69,7 @@ local autoSellEnabled = false
 local autoCollect = false
 local autoBuyEggs = false
 local EggTypeTable = {}
+local timerrec = 0.1
 local collectMoonlit = false
 local collectMoonlitTurnIn = false
 
@@ -279,10 +280,22 @@ local Dropdown2131 = Settings:CreateDropdown({
    Options = {"Bloodlit", "Burnt", "Celestial", "Chilled", "Frozen", "Moonlit", "Shocked", "Twisted", "Unused", "Wet", "Zombified", "Choc"},
    CurrentOption = {},
    MultipleOptions = true,
-   Flag = "DropdownMutations2", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Flag = "DropdownMutations", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
    Callback = function(Options)
    MutationsTable = Options
    print("✅ Selected Plants:", table.concat(MutationsTable, ", "))
+   end,
+})
+
+local Slider3131 = Settings:CreateSlider({
+   Name = "Grab Timer (0 = Lag)",
+   Range = {0, 1},
+   Increment = 0.05,
+   Suffix = "Seconds",
+   CurrentValue = timerrec,
+   Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+   timer = Value
    end,
 })
 
@@ -344,7 +357,7 @@ local Divider3 = Settings:CreateDivider()
 
 local Slider = Settings:CreateSlider({
    Name = "Sell Count",
-   Range = {0, 200},
+   Range = {0, 100},
    Increment = 1,
    Suffix = "Items",
    CurrentValue = holdablemax,
@@ -441,6 +454,7 @@ local Toggle = Main:CreateToggle({
                                             if shouldCollect then
                                                 for _, desc in ipairs(fruit:GetDescendants()) do
                                                     if desc:IsA("ProximityPrompt") then
+                                                        wait(timer)
                                                         fireproximityprompt(desc)
                                                         break
                                                     end
@@ -462,6 +476,7 @@ local Toggle = Main:CreateToggle({
         end
     end,
 })
+
 
 
 local Toggle2 = Main:CreateToggle({
