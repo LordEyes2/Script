@@ -396,6 +396,17 @@ local Toggle = Main:CreateToggle({
 })
 ]]--
 
+local function isValidRarity(variantValue, rarityTable)
+    if not variantValue then return false end
+    local val = tostring(variantValue):lower():gsub("%s+", "")
+    for _, rarity in ipairs(rarityTable) do
+        if val == tostring(rarity):lower():gsub("%s+", "") then
+            return true
+        end
+    end
+    return false
+end
+
 local Toggle = Main:CreateToggle({
     Name = "Auto Collect Plants",
     CurrentValue = false,
@@ -422,44 +433,52 @@ local Toggle = Main:CreateToggle({
                                     end
 
                                     for _, fruit in ipairs(roots) do
-                                        local variant = plantType:FindFirstChild("Variant")
-                                        if variant and table.find(RarityTable, variant.Value) then
-                                            local shouldCollect = false
+                                        -- Check Variant per fruit now
+                                        local variant = fruit:FindFirstChild("Variant")
+                                        if not variant or not variant.Value then
+                                            print("⚠️ Skipping fruit with no Variant:", fruit.Name)
+                                            continue
+                                        end
+                                        
+                                        if not isValidRarity(variant.Value, RarityTable) then
+                                            -- Debug print
+                                            print("⏭️ Skipping fruit due to rarity mismatch:", fruit.Name, "Variant:", variant.Value)
+                                            continue
+                                        end
 
-                                            if MutationsTable == nil or #MutationsTable == 0 then
-                                                -- No mutations selected, collect fruit with no mutation attributes
-                                                local hasAnyMutationAttr = false
-                                                -- Check if any attribute from ALL possible mutations is true
-                                                -- Assuming you have a list of all possible mutations
-                                                local allPossibleMutations = {"Bloodlit", "Burnt", "Celestial", "Chilled", "Frozen", "Moonlit", "Shocked", "Twisted", "Unused", "Wet", "Zombified", "Choc"}
-                                                for _, mutation in ipairs(allPossibleMutations) do
-                                                    if fruit:GetAttribute(mutation) == true then
-                                                        hasAnyMutationAttr = true
-                                                        break
-                                                    end
+                                        local shouldCollect = false
+
+                                        if MutationsTable == nil or #MutationsTable == 0 then
+                                            local hasAnyMutationAttr = false
+                                            local allPossibleMutations = {"Bloodlit", "Burnt", "Celestial", "Chilled", "Frozen", "Moonlit", "Shocked", "Twisted", "Unused", "Wet", "Zombified", "Choc"}
+                                            for _, mutation in ipairs(allPossibleMutations) do
+                                                if fruit:GetAttribute(mutation) == true then
+                                                    hasAnyMutationAttr = true
+                                                    break
                                                 end
-                                                if not hasAnyMutationAttr then
+                                            end
+                                            if not hasAnyMutationAttr then
+                                                shouldCollect = true
+                                            end
+                                        else
+                                            for _, mutation in ipairs(MutationsTable) do
+                                                if fruit:GetAttribute(mutation) == true then
                                                     shouldCollect = true
-                                                end
-                                            else
-                                                -- Mutations selected, collect if fruit has at least one mutation attribute true from selected mutations
-                                                for _, mutation in ipairs(MutationsTable) do
-                                                    if fruit:GetAttribute(mutation) == true then
-                                                        shouldCollect = true
-                                                        break
-                                                    end
+                                                    break
                                                 end
                                             end
+                                        end
 
-                                            if shouldCollect then
-                                                for _, desc in ipairs(fruit:GetDescendants()) do
-                                                    if desc:IsA("ProximityPrompt") then
-                                                        wait(timer)
-                                                        fireproximityprompt(desc)
-                                                        break
-                                                    end
+                                        if shouldCollect then
+                                            for _, desc in ipairs(fruit:GetDescendants()) do
+                                                if desc:IsA("ProximityPrompt") then
+                                                    task.wait(timer)
+                                                    fireproximityprompt(desc)
+                                                    break
                                                 end
                                             end
+                                        else
+                                            print("⏭️ Skipping fruit due to mutation mismatch:", fruit.Name)
                                         end
                                     end
                                 end
@@ -476,8 +495,6 @@ local Toggle = Main:CreateToggle({
         end
     end,
 })
-
-
 
 local Toggle2 = Main:CreateToggle({
    Name = "Auto Buy",
