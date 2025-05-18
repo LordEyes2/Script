@@ -61,6 +61,7 @@ local RarityTable = {}
 local BuyTable = {}
 local BuyTable2 = {}
 local BloodBuyTable = {}
+local MutationsTable = {}
 local holdablemax = 50
 local autoBuy = false
 local autoBuyBlood = false
@@ -273,6 +274,18 @@ local Dropdown2 = Settings:CreateDropdown({
    end,
 })
 
+local Dropdown2131 = Settings:CreateDropdown({
+   Name = "Mutations to Grab",
+   Options = {"Bloodlit", "Burnt", "Celestial", "Chilled", "Frozen", "Moonlit", "Shocked", "Twisted", "Unused", "Wet", "Zombified", "Choc"},
+   CurrentOption = {},
+   MultipleOptions = true,
+   Flag = "DropdownMutations2", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Options)
+   MutationsTable = Options
+   print("✅ Selected Plants:", table.concat(MutationsTable, ", "))
+   end,
+})
+
 local Section2 = Settings:CreateSection("Auto Buy Settings")
 local Divider2 = Settings:CreateDivider()
 
@@ -331,7 +344,7 @@ local Divider3 = Settings:CreateDivider()
 
 local Slider = Settings:CreateSlider({
    Name = "Sell Count",
-   Range = {0, 100},
+   Range = {0, 200},
    Increment = 1,
    Suffix = "Items",
    CurrentValue = holdablemax,
@@ -371,84 +384,85 @@ local Toggle = Main:CreateToggle({
 ]]--
 
 local Toggle = Main:CreateToggle({
-   Name = "Auto Collect Plants",
-   CurrentValue = false,
-   Flag = "Toggle1",
-   Callback = function(Value)
-       autoCollect = Value
-       print("🌱 Auto Collect Activated:", Value)
+    Name = "Auto Collect Plants",
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function(Value)
+        autoCollect = Value
+        print("🌱 Auto Collect Activated:", Value)
 
-       if autoCollect then
-           task.spawn(function()
-               while autoCollect do
-                   --print("🔁 Auto Collect loop running...")
+        if autoCollect then
+            task.spawn(function()
+                while autoCollect do
+                    local important = OwnerPlot and OwnerPlot.Parent.Parent.Parent:FindFirstChild("Important")
+                    if important then
+                        local physicalPlants = important:FindFirstChild("Plants_Physical")
+                        if physicalPlants then
+                            for _, plantType in ipairs(physicalPlants:GetChildren()) do
+                                if table.find(GrabTable, plantType.Name) then
+                                    local roots = {}
 
-                   -- Check if the Important folder exists
-                   local important = OwnerPlot and OwnerPlot.Parent.Parent.Parent:FindFirstChild("Important")
-                   if important then
-                       local physicalPlants = important:FindFirstChild("Plants_Physical")
-                       if physicalPlants then
-                           for _, plantType in ipairs(physicalPlants:GetChildren()) do
-                               if table.find(GrabTable, plantType.Name) then
-                                   --print("✅ Found plant:", plantType.Name)
+                                    if plantType:FindFirstChild("Fruits") then
+                                        roots = plantType.Fruits:GetChildren()
+                                    else
+                                        roots = plantType:GetChildren()
+                                    end
 
-                                   local roots = {}
-                                   -- Check for Fruits folder first
-                                   if plantType:FindFirstChild("Fruits") then
-                                       -- The plant has a Fruits folder, use that
-                                       roots = plantType.Fruits:GetChildren()
-                                       --print("🟢 Found Fruits folder for", plantType.Name)
-                                   else
-                                       -- The plant does not have a Fruits folder, use the plant directly
-                                       roots = plantType:GetChildren()
-                                       --print("🟠 No Fruits folder, using direct children for", plantType.Name)
-                                   end
+                                    for _, fruit in ipairs(roots) do
+                                        local variant = plantType:FindFirstChild("Variant")
+                                        if variant and table.find(RarityTable, variant.Value) then
+                                            local shouldCollect = false
 
-                                   -- Check for ProximityPrompt in each root element
-                                   for _, fruit in ipairs(roots) do
-                                       --print("🔍 Checking:", fruit.Name)
+                                            if MutationsTable == nil or #MutationsTable == 0 then
+                                                -- No mutations selected, collect fruit with no mutation attributes
+                                                local hasAnyMutationAttr = false
+                                                -- Check if any attribute from ALL possible mutations is true
+                                                -- Assuming you have a list of all possible mutations
+                                                local allPossibleMutations = {"Bloodlit", "Burnt", "Celestial", "Chilled", "Frozen", "Moonlit", "Shocked", "Twisted", "Unused", "Wet", "Zombified", "Choc"}
+                                                for _, mutation in ipairs(allPossibleMutations) do
+                                                    if fruit:GetAttribute(mutation) == true then
+                                                        hasAnyMutationAttr = true
+                                                        break
+                                                    end
+                                                end
+                                                if not hasAnyMutationAttr then
+                                                    shouldCollect = true
+                                                end
+                                            else
+                                                -- Mutations selected, collect if fruit has at least one mutation attribute true from selected mutations
+                                                for _, mutation in ipairs(MutationsTable) do
+                                                    if fruit:GetAttribute(mutation) == true then
+                                                        shouldCollect = true
+                                                        break
+                                                    end
+                                                end
+                                            end
 
-                                       -- Directly look for Variant under the plantType
-                                       local variant = plantType:FindFirstChild("Variant")
-                                       if variant then
-                                           --print("📝 Variant found:", variant.Value)
-                                           if table.find(RarityTable, variant.Value) then
-                                               -- Look for ProximityPrompt under fruit
-                                               local foundPrompt = false
-                                               for _, desc in ipairs(fruit:GetDescendants()) do
-                                                   if desc:IsA("ProximityPrompt") then
-                                                       --print("🔘 ProximityPrompt found:", desc.Name)
-                                                       fireproximityprompt(desc)
-                                                       foundPrompt = true
-                                                       --print("✅ Collected:", fruit.Name, "-", variant.Value)
-                                                       break
-                                                   end
-                                               end
+                                            if shouldCollect then
+                                                for _, desc in ipairs(fruit:GetDescendants()) do
+                                                    if desc:IsA("ProximityPrompt") then
+                                                        fireproximityprompt(desc)
+                                                        break
+                                                    end
+                                                end
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    else
+                        print("❌ OwnerPlot not found or doesn't contain Important")
+                    end
 
-                                               if not foundPrompt then
-                                                   --print("⚠️ No ProximityPrompt found in", fruit.Name)
-                                               end
-                                           else
-                                               --print("⚠️ Variant not in RarityTable:", variant.Value)
-                                           end
-                                       else
-                                           --print("⚠️ No Variant found directly under", plantType.Name)
-                                       end
-                                   end
-                               end
-                           end
-                       end
-                   else
-                       print("❌ OwnerPlot not found or doesn't contain Important")
-                   end
-
-                   task.wait(1.5)
-               end
-               print("⛔ Auto Collect stopped.")
-           end)
-       end
-   end,
+                    task.wait(1.5)
+                end
+                print("⛔ Auto Collect stopped.")
+            end)
+        end
+    end,
 })
+
 
 local Toggle2 = Main:CreateToggle({
    Name = "Auto Buy",
