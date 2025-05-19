@@ -246,7 +246,6 @@ table.insert(fruitOptions, "Orange Tulip")
 table.insert(fruitOptions, "Daffodil")
 table.insert(fruitOptions, "Watermelon")
 table.insert(fruitOptions, "Pumpkin")
-table.insert(fruitOptions, "Beanstalk")
 for _, fruit in ipairs(game.ReplicatedStorage:WaitForChild("Fruit_Spawn"):GetChildren()) do
     table.insert(fruitOptions, fruit.Name)
 end
@@ -440,7 +439,7 @@ local Toggle = Main:CreateToggle({
                                         end
 
                                         if not isValidRarity then
-                                            --print("❌ Skipping fruit due to unlisted rarity:", variantObj.Value)
+                                            print("❌ Skipping fruit due to unlisted rarity:", variantObj.Value)
                                             continue
                                         end
 
@@ -494,7 +493,7 @@ local Toggle = Main:CreateToggle({
                         print("❌ OwnerPlot not found or doesn't contain Important")
                     end
 
-                    task.wait(timer)
+                    task.wait(0.5)
                 end
                 print("⛔ Auto Collect stopped.")
             end)
