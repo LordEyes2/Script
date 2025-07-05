@@ -87,7 +87,11 @@ local Button = Tab:CreateButton({
       -- Activate and fire dig
       tool:Activate()
       wait(CDSlider)
-      game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Dig_Finished"):FireServer(0, {})
+      local args = {
+            0,
+            {}
+         }
+         game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Dig_Finished"):FireServer(unpack(args))
    end,
 })
 
