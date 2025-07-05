@@ -53,32 +53,44 @@ local Button = Tab:CreateButton({
       local backpack = player:WaitForChild("Backpack")
       local tool = nil
 
-      local shovelFolder = game:GetService("ReplicatedStorage"):WaitForChild("PlayerItems"):WaitForChild("Shovels")
-      for _, shovel in pairs(shovelFolder:GetChildren()) do
-         local shovelName = shovel.Name
-         local foundTool = backpack:FindFirstChild(shovelName)
-         if foundTool and foundTool:IsA("Tool") then
-            foundTool.Parent = character -- Equip it
-            tool = foundTool
+      -- Get all valid shovel names from ReplicatedStorage
+      local validShovelNames = {}
+      for _, shovel in pairs(game:GetService("ReplicatedStorage"):WaitForChild("PlayerItems"):WaitForChild("Shovels"):GetChildren()) do
+         table.insert(validShovelNames, shovel.Name)
+      end
+
+      -- First, check if the equipped tool is a valid shovel
+      for _, item in ipairs(character:GetChildren()) do
+         if item:IsA("Tool") and table.find(validShovelNames, item.Name) then
+            tool = item
             break
          end
       end
 
+      -- If not equipped, try to find it in the backpack
       if not tool then
-         print("No valid shovel found in Backpack matching PlayerItems.Shovels!")
+         for _, item in ipairs(backpack:GetChildren()) do
+            if item:IsA("Tool") and table.find(validShovelNames, item.Name) then
+               item.Parent = character -- Equip it
+               tool = item
+               break
+            end
+         end
+      end
+
+      -- Still not found
+      if not tool then
+         print("No valid shovel found in Character or Backpack!")
          return
       end
-      if tool then
-         tool:Activate()
-         wait(CDSlider)
-         local args = {
-            0,
-            {}
-         }
-         game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Dig_Finished"):FireServer(unpack(args))
-      end
+
+      -- Activate and fire dig
+      tool:Activate()
+      wait(CDSlider)
+      game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Dig_Finished"):FireServer(0, {})
    end,
 })
+
 
 local Button = Tab:CreateButton({
    Name = "Sell All",
