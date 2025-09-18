@@ -1,0 +1,1511 @@
+-- RayField
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+-- RayField UI
+local Window = Rayfield:CreateWindow({
+   Name = "Personal Hub",
+   Icon = 0,
+   LoadingTitle = "Loading...",
+   LoadingSubtitle = "by Personal Hub",
+   ShowText = "Rayfield",
+   Theme = "Default",
+   ToggleUIKeybind = "K",
+   DisableRayfieldPrompts = false,
+   DisableBuildWarnings = false,
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = nil,
+      FileName = "Big Hub"
+   },
+   Discord = {
+      Enabled = false,
+      Invite = "noinvitelink",
+      RememberJoins = true
+   },
+   KeySystem = false,
+   KeySettings = {
+      Title = "Untitled",
+      Subtitle = "Key System",
+      Note = "No method of obtaining the key is provided",
+      FileName = "Key",
+      SaveKey = true,
+      GrabKeyFromSite = false,
+      Key = {"Hello"}
+   }
+})
+
+-- RayField Tabs
+local Teleports = Window:CreateTab("Teleports", 4483362458)
+local Grabs = Window:CreateTab("Grabs", 4483362458)
+local Automations = Window:CreateTab("Automations", 4483362458)
+local Settings = Window:CreateTab("Settings", 4483362458)
+
+-- RayField Sections
+local TeleportsSection1 = Teleports:CreateSection("Teleports")
+local GrabsSection1 = Grabs:CreateSection("Grabs")
+local AutomationsSection1 = Automations:CreateSection("Automation")
+local SettingsSection1 = Settings:CreateSection("Settings")
+
+-- RayField Dividers
+local TeleportDivider = Teleports:CreateDivider()
+local GrabsDivider = Grabs:CreateDivider()
+local AutomationsDivider = Automations:CreateDivider()
+local SettingsDivider = Settings:CreateDivider()
+
+-- Startup Scripts
+local function sundial()
+local player = game:GetService("Players").LocalPlayer
+local TopRight = player.PlayerGui:WaitForChild("Interface"):WaitForChild("TopRight")
+local SunDial = TopRight.Frame.SunDial
+TopRight.Visible = true
+TopRight.Frame.Rain.Visible = true
+TopRight.Frame.SunDial.Visible = true
+TopRight.Frame.Compass.Visible = true
+end
+
+sundial()
+
+--[[ VARIABLES ]]--
+local AutoTree = false
+local AutoHit = false
+local GrabFuel = false
+local GrabGears = false
+local GrabTools = false
+local GrabOthers = false
+local GrabFood = false
+local HitRange = 10
+local Range = 10
+local TreeType = {}
+local FuelTypes = {}
+local FuelEsp = false
+local FoodTypes = {}
+local FoodEsp = false
+local GearTypes = {}
+local GearEsp = false
+local ToolTypes = {}
+local ToolEsp = false
+local OtherTypes = {}
+local OtherEsp = false
+
+--[[ UI ELEMENTS ]]--
+
+local TeleportCamp = Teleports:CreateButton({
+   Name = "Camp",
+   Callback = function()
+   local player = game:GetService("Players").LocalPlayer
+   local char = player.Character or player.CharacterAdded:Wait()
+	local root = char:WaitForChild("HumanoidRootPart")
+	local campfire = game.Workspace.Map.Campground:FindFirstChild("MainFire"):FindFirstChild("OuterTouchZone")
+	root.CFrame = campfire.CFrame + Vector3.new(0, 5, 0)
+   end,
+})
+
+-- Auto Cut Trees
+local AutoTreeToggle = Automations:CreateToggle({
+   Name = "Auto Cut Trees",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(Value)
+      AutoTree = Value
+
+      if AutoTree then
+         Rayfield:Notify({
+            Title = "Warning!",
+            Content = "Please equip an axe to use!",
+            Duration = 6.5,
+            Image = "triangle-alert",
+         })
+
+         -- Start auto-cutting loop
+         spawn(function()
+            local player = game:GetService("Players").LocalPlayer
+            local replicatedStorage = game:GetService("ReplicatedStorage")
+            local treesLastUpdate = {} -- Track last Health update time for each tree
+            local activeTasks = {} -- Track active tasks for cancellation
+            local taskLock = false -- Prevent tasks during cleanup
+
+            while AutoTree do
+               if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("ToolHandle") then
+                  local playerPos = player.Character.HumanoidRootPart.Position
+                  local playerCFrame = player.Character.HumanoidRootPart.CFrame
+
+                  -- Find an axe in Inventory (Model with "Axe" in its name)
+                  local toolInstance = nil
+                  local weaponDamage = 1
+                  if player:FindFirstChild("Inventory") then
+                     for _, item in pairs(player.Inventory:GetChildren()) do
+                        if item:IsA("Model") and string.find(string.lower(item.Name), "axe") then
+                           toolInstance = item
+                           local damageAttr = item:GetAttribute("WeaponResourceDamage")
+                           if damageAttr then
+                              weaponDamage = damageAttr
+                           end
+                           break
+                        end
+                     end
+                  end
+
+                  if toolInstance then
+                     -- Find trees in Foliage and Landmarks within range
+                     local map = workspace:WaitForChild("Map")
+                     local foliage = map:WaitForChild("Foliage")
+                     local landmarks = map:WaitForChild("Landmarks")
+                     local treesInRange = {}
+
+                     -- Check Foliage
+                     for _, obj in pairs(foliage:GetChildren()) do
+                        if table.find(TreeType, obj.Name) and obj:IsA("Model") then
+                           local treePart = obj:FindFirstChild("Trunk")
+                           if treePart and treePart:IsA("BasePart") then
+                              local treePos = treePart.Position
+                              local distance = (playerPos - treePos).Magnitude
+                              if distance <= Range then
+                                 table.insert(treesInRange, {Object = obj, Position = treePos, CFrame = treePart.CFrame})
+                              end
+                           end
+                        end
+                     end
+
+                     -- Check Landmarks
+                     for _, obj in pairs(landmarks:GetChildren()) do
+                        if table.find(TreeType, obj.Name) and obj:IsA("Model") then
+                           local treePart = obj:FindFirstChild("Trunk")
+                           if treePart and treePart:IsA("BasePart") then
+                              local treePos = treePart.Position
+                              local distance = (playerPos - treePos).Magnitude
+                              if distance <= Range then
+                                 table.insert(treesInRange, {Object = obj, Position = treePos, CFrame = treePart.CFrame})
+                              end
+                           end
+                        end
+                     end
+
+                     -- Spawn a task for each tree to hit independently
+                     if #treesInRange > 0 and not taskLock then
+                        for _, treeData in ipairs(treesInRange) do
+                           local taskKey = tostring(treeData.Object)
+                           activeTasks[taskKey] = task.spawn(function()
+                              local tree = treeData.Object
+                              local treeCFrame = treeData.CFrame
+                              local treePart = tree:FindFirstChild("Trunk")
+
+                              -- Get or create HitRegisters for the tree
+                              local hitRegisters = tree:FindFirstChild("HitRegisters")
+                              if not hitRegisters then
+                                 hitRegisters = Instance.new("Folder")
+                                 hitRegisters.Name = "HitRegisters"
+                                 hitRegisters.Parent = tree
+                              end
+
+                              -- Get hit count from HitRegisters
+                              local hitCount = 0
+                              for attrName, _ in pairs(hitRegisters:GetAttributes()) do
+                                 local count = tonumber(string.match(attrName, "^(%d+)_%d+$") or 0)
+                                 if count and count > hitCount then
+                                    hitCount = count
+                                 end
+                              end
+                              hitCount = hitCount + 1
+                              local timestamp = tostring(os.time())
+                              local hitId = tostring(hitCount) .. "_" .. timestamp
+
+                              -- Set the hit attribute
+                              hitRegisters:SetAttribute(hitId, true)
+
+                              -- Prepare arguments for the remote event
+                              local args = {
+                                 tree,
+                                 toolInstance,
+                                 hitId,
+                                 playerCFrame
+                              }
+                              -- Invoke the remote event
+                              local success, err = pcall(function()
+                                 replicatedStorage:WaitForChild("RemoteEvents"):WaitForChild("ToolDamageObject"):InvokeServer(unpack(args))
+                              end)
+                              if not success then
+                                 hitRegisters:SetAttribute(hitId, nil)
+                              else
+                                 -- Add or update TextLabel with Health
+                                 if treePart then
+                                    local health = tree:GetAttribute("Health") or 0
+                                    local billboard = treePart:FindFirstChild("HealthBillboard")
+                                    if not billboard then
+                                       billboard = Instance.new("BillboardGui")
+                                       billboard.Name = "HealthBillboard"
+                                       billboard.AlwaysOnTop = true
+                                       billboard.Size = UDim2.new(4, 0, 1, 0)
+                                       billboard.StudsOffset = Vector3.new(0, 3, 0)
+                                       billboard.Parent = treePart
+
+                                       local textLabel = Instance.new("TextLabel")
+                                       textLabel.Size = UDim2.new(1, 0, 1, 0)
+                                       textLabel.BackgroundTransparency = 1
+                                       textLabel.TextColor3 = Color3.new(1, 1, 1)
+                                       textLabel.TextStrokeTransparency = 0
+                                       textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+                                       textLabel.Font = Enum.Font.SourceSansBold
+                                       textLabel.TextSize = 20
+                                       textLabel.Text = "HP: " .. tostring(health)
+                                       textLabel.Parent = billboard
+                                    else
+                                       local textLabel = billboard:FindFirstChildWhichIsA("TextLabel")
+                                       if textLabel then
+                                          textLabel.Text = "HP: " .. tostring(health)
+                                       end
+                                    end
+                                    -- Track last update time
+                                    treesLastUpdate[tree] = os.time()
+                                 end
+                              end
+
+                              -- Delay to prevent spamming the server
+                              task.wait(0.01)
+                           end)
+                        end
+                     end
+
+                     -- Clean up labels for trees not updated in 10 seconds
+                     for tree, lastUpdateTime in pairs(treesLastUpdate) do
+                        if os.time() - lastUpdateTime > 10 then
+                           local treePart = tree:FindFirstChild("Trunk")
+                           if treePart then
+                              local billboard = treePart:FindFirstChild("HealthBillboard")
+                              if billboard then
+                                 billboard:Destroy()
+                              end
+                           end
+                           treesLastUpdate[tree] = nil
+                        end
+                     end
+
+                     -- Clear active tasks for the next loop
+                     activeTasks = {}
+
+                     -- Small delay to prevent excessive server calls
+                     wait(0.01)
+                  else
+                     -- Notify if no axe is found in Inventory
+                     Rayfield:Notify({
+                        Title = "Error!",
+                        Content = "No axe found in Inventory! Please equip an axe.",
+                        Duration = 3,
+                        Image = "circle-x",
+                     })
+                     AutoTree = false
+                     break
+                  end
+               else
+                  -- Notify if ToolHandle or character is missing
+                  Rayfield:Notify({
+                     Title = "Error!",
+                     Content = "ToolHandle not found or character not loaded!",
+                     Duration = 3,
+                     Image = "circle-x",
+                  })
+                  AutoTree = false
+                  break
+               end
+            end
+
+            -- Set taskLock to prevent new tasks during cleanup
+            taskLock = true
+
+            -- Clean up all labels and cancel tasks when toggle is turned off
+            local map = workspace:WaitForChild("Map")
+            local foliage = map:WaitForChild("Foliage")
+            local landmarks = map:WaitForChild("Landmarks")
+            for _, tree in pairs(foliage:GetChildren()) do
+               if tree:IsA("Model") then
+                  local treePart = tree:FindFirstChild("Trunk")
+                  if treePart then
+                     local billboard = treePart:FindFirstChild("HealthBillboard")
+                     if billboard then
+                        billboard:Destroy()
+                     end
+                  end
+               end
+            end
+            for _, tree in pairs(landmarks:GetChildren()) do
+               if tree:IsA("Model") then
+                  local treePart = tree:FindFirstChild("Trunk")
+                  if treePart then
+                     local billboard = treePart:FindFirstChild("HealthBillboard")
+                     if billboard then
+                        billboard:Destroy()
+                     end
+                  end
+               end
+            end
+            for tree, _ in pairs(treesLastUpdate) do
+               local treePart = tree:FindFirstChild("Trunk")
+               if treePart then
+                  local billboard = treePart:FindFirstChild("HealthBillboard")
+                  if billboard then
+                     billboard:Destroy()
+                  end
+               end
+            end
+            for taskKey, taskRef in pairs(activeTasks) do
+               task.cancel(taskRef)
+            end
+            treesLastUpdate = {}
+            activeTasks = {}
+            taskLock = false
+         end)
+      end
+   end,
+})
+
+local RangeSlider = Automations:CreateSlider({
+   Name = "Cut Range",
+   Range = {0, 500},
+   Increment = 10,
+   Suffix = "Studs",
+   CurrentValue = 10,
+   Flag = "Slider1",
+   Callback = function(Value)
+      Range = Value
+   end,
+})
+
+local TreeDropdown = Automations:CreateDropdown({
+   Name = "Tree Type",
+   Options = {"Small Tree", "TreeBig1", "TreeBig2", "TreeBig3", "Snowy Small Tree"},
+   CurrentOption = {},
+   MultipleOptions = true,
+   Flag = "Dropdown1",
+   Callback = function(Options)
+      TreeType = Options
+   end,
+})
+
+local ClearBillboard = Automations:CreateButton({
+   Name = "Clear Text",
+   Callback = function()
+            local map = workspace:WaitForChild("Map")
+            local foliage = map:WaitForChild("Foliage")
+            local landmarks = map:WaitForChild("Landmarks")
+            for _, tree in pairs(foliage:GetChildren()) do
+               if tree:IsA("Model") then
+                  local treePart = tree:FindFirstChild("Trunk")
+                  if treePart then
+                     local billboard = treePart:FindFirstChild("HealthBillboard")
+                     if billboard then
+                        billboard:Destroy()
+                     end
+                  end
+               end
+            end
+            for _, tree in pairs(landmarks:GetChildren()) do
+               if tree:IsA("Model") then
+                  local treePart = tree:FindFirstChild("Trunk")
+                  if treePart then
+                     local billboard = treePart:FindFirstChild("HealthBillboard")
+                     if billboard then
+                        billboard:Destroy()
+                     end
+                  end
+               end
+            end
+   end,
+})
+
+local AutomationsDivider2 = Automations:CreateDivider()
+
+-- Auto Hit Entities
+local AutoHitToggle = Automations:CreateToggle({
+   Name = "Auto Hit Entities",
+   CurrentValue = false,
+   Flag = "Toggle2",
+   Callback = function(Value)
+      AutoHit = Value
+
+      if AutoHit then
+         Rayfield:Notify({
+            Title = "Warning!",
+            Content = "Please equip an axe to use!",
+            Duration = 6.5,
+            Image = "triangle-alert",
+         })
+
+         -- Start auto-hitting loop
+         spawn(function()
+            local player = game:GetService("Players").LocalPlayer
+            local replicatedStorage = game:GetService("ReplicatedStorage")
+            local characters = workspace:WaitForChild("Characters")
+            local activeTasks = {} -- Track active tasks for cancellation
+            local taskLock = false -- Prevent tasks during cleanup
+
+            while AutoHit do
+               if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player:FindFirstChild("Inventory") then
+                  local playerPos = player.Character.HumanoidRootPart.Position
+                  local playerCFrame = player.Character.HumanoidRootPart.CFrame
+
+                  -- Find axe or weapon in inventory
+                  local toolInstance = nil
+                  if player.Inventory then
+                     for _, item in pairs(player.Inventory:GetChildren()) do
+                        if item:IsA("Model") and (string.find(string.lower(item.Name), "axe") or item.Name == "Morningstar" or item.Name == "Laser Sword" or item.Name == "Ice Sword" or item.Name == "Chainsaw" or item.Name == "Spear") then
+                           toolInstance = item
+                           break
+                        end
+                     end
+                  end
+
+                  if toolInstance then
+                     -- Find entities in Characters within range
+                     local entitiesInRange = {}
+                     for _, entity in pairs(characters:GetChildren()) do
+                        if entity:IsA("Model") and entity:FindFirstChild("HumanoidRootPart") then
+                           local entityPos = entity.HumanoidRootPart.Position
+                           local distance = (playerPos - entityPos).Magnitude
+                           if distance <= HitRange then
+                              table.insert(entitiesInRange, {Object = entity, Position = entityPos, CFrame = entity.HumanoidRootPart.CFrame})
+                           end
+                        end
+                     end
+
+                     -- Spawn a task for each entity to hit independently
+                     if #entitiesInRange > 0 and not taskLock then
+                        for _, entityData in ipairs(entitiesInRange) do
+                           local taskKey = tostring(entityData.Object)
+                           activeTasks[taskKey] = task.spawn(function()
+                              local entity = entityData.Object
+                              local entityCFrame = entityData.CFrame
+
+                              -- Create unique hitId
+                              local hitId = tostring(math.random(1, 999)) .. "_" .. tostring(os.time())
+
+                              -- Prepare args
+                              local args = {
+                                 entity,
+                                 toolInstance,
+                                 hitId,
+                                 playerCFrame
+                              }
+
+                              -- Invoke remote
+                              local success, err = pcall(function()
+                                 replicatedStorage:WaitForChild("RemoteEvents"):WaitForChild("ToolDamageObject"):InvokeServer(unpack(args))
+                              end)
+
+                              -- Delay to prevent spamming the server
+                              task.wait(0.01)
+                           end)
+                        end
+                     end
+
+                     -- Clear active tasks for the next loop
+                     activeTasks = {}
+
+                     -- Small delay to prevent excessive server calls
+                     wait(0.01)
+                  else
+                     -- Notify if no weapon is found in Inventory
+                     Rayfield:Notify({
+                        Title = "Error!",
+                        Content = "No axe found in Inventory! Please equip an axe.",
+                        Duration = 3,
+                        Image = "circle-x",
+                     })
+                     AutoHit = false
+                     break
+                  end
+               else
+                  -- Notify if character or Inventory is missing
+                  Rayfield:Notify({
+                     Title = "Error!",
+                     Content = "Character not loaded or Inventory missing!",
+                     Duration = 3,
+                     Image = "circle-x",
+                  })
+                  AutoHit = false
+                  break
+               end
+            end
+
+            -- Set taskLock to prevent new tasks during cleanup
+            taskLock = true
+
+            -- Cancel all tasks when toggle is turned off
+            for taskKey, taskRef in pairs(activeTasks) do
+               task.cancel(taskRef)
+            end
+            activeTasks = {}
+            taskLock = false
+         end)
+      end
+   end,
+})
+
+-- Hit Range Slider
+local RangeSlider2 = Automations:CreateSlider({
+   Name = "Hit Range",
+   Range = {0, 500},
+   Increment = 10,
+   Suffix = "Studs",
+   CurrentValue = 10,
+   Flag = "Slider2",
+   Callback = function(Value)
+      HitRange = Value
+   end,
+})
+
+local AutomationsDivider2 = Automations:CreateDivider()
+
+-- Grab Fuels
+local GrabFuelToggle = Grabs:CreateToggle({
+   Name = "Grab Fuels",
+   CurrentValue = false,
+   Flag = "Toggle3",
+   Callback = function(Value)
+      GrabFuel = Value
+
+      if GrabFuel then
+         local player = game:GetService("Players").LocalPlayer
+         local char = player.Character or player.CharacterAdded:Wait()
+         local root = char:WaitForChild("HumanoidRootPart")
+         local itemsFolder = workspace:WaitForChild("Items")
+
+         -- Save original position
+         local originalCFrame = root.CFrame
+         local grabbedItems = {}
+         local amount = 0
+
+         for _, item in pairs(itemsFolder:GetChildren()) do
+            if not GrabFuel then break end -- stop if toggle turned off
+            if item:IsA("Model") and table.find(FuelTypes, item.Name) then
+               if not grabbedItems[item] then
+                  grabbedItems[item] = true
+                  amount += 1
+
+                  local primary = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+                  if primary then
+                     item:SetAttribute("InteractedWith", true)
+                     item:SetAttribute("LastOwner", 9424690369)
+                     -- STEP 1: Return to OG
+                     root.CFrame = originalCFrame
+                     task.wait(0.25)
+
+                     -- STEP 2: Teleport to item
+                     root.CFrame = primary.CFrame * CFrame.new(0, 3, 0)
+                     task.wait(0.25)
+
+                     -- STEP 3: Teleport item to player
+                     item:SetPrimaryPartCFrame(root.CFrame)
+                     task.wait(0.25)
+
+                     -- STEP 4: Return to OG
+                     root.CFrame = originalCFrame
+                     item:SetPrimaryPartCFrame(root.CFrame)
+                     task.wait(0.4) -- longer wait ensures it settles before next loop
+                  end
+               end
+            end
+         end
+
+         -- Always return player to OG
+         root.CFrame = originalCFrame
+
+         -- Notify
+         Rayfield:Notify({
+            Title = "Grabbing Fuels Complete",
+            Content = "Total items grabbed: " .. amount,
+            Duration = 6.5,
+            Image = "circle-check",
+         })
+
+         GrabFuel = false
+      end
+   end,
+})
+
+-- Fuel ESP
+local FuelEspToggle = Grabs:CreateToggle({
+   Name = "Fuel Esp",
+   CurrentValue = false,
+   Flag = "Toggleidk",
+   Callback = function(Value)
+      FuelEsp = Value
+
+      if FuelEsp then
+         spawn(function()
+            local player = game:GetService("Players").LocalPlayer
+            local itemsFolder = workspace:WaitForChild("Items")
+
+            while FuelEsp do
+               if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                  local playerPos = player.Character.HumanoidRootPart.Position
+
+                  -- Update or create labels for fuel items
+                  for _, item in pairs(itemsFolder:GetChildren()) do
+                     if item:IsA("Model") and table.find(FuelTypes, item.Name) then
+                        local primary = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+                        if primary then
+                           local distance = (playerPos - primary.Position).Magnitude
+                           local billboard = primary:FindFirstChild("FuelEspBillboard")
+                           if not billboard then
+                              billboard = Instance.new("BillboardGui")
+                              billboard.Name = "FuelEspBillboard"
+                              billboard.AlwaysOnTop = true
+                              billboard.Size = UDim2.new(4, 0, 1, 0)
+                              billboard.StudsOffset = Vector3.new(0, 3, 0)
+                              billboard.Parent = primary
+
+                              local textLabel = Instance.new("TextLabel")
+                              textLabel.Size = UDim2.new(1, 0, 1, 0)
+                              textLabel.BackgroundTransparency = 1
+                              textLabel.TextColor3 = Color3.fromRGB(255, 117, 24)
+                              textLabel.TextStrokeTransparency = 0
+                              textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+                              textLabel.Font = Enum.Font.SourceSansBold
+                              textLabel.TextSize = 20
+                              textLabel.Text = item.Name .. "\n" .. string.format("[%.1f]", distance)
+                              textLabel.Parent = billboard
+                           else
+                              local textLabel = billboard:FindFirstChildWhichIsA("TextLabel")
+                              if textLabel then
+                                 textLabel.Text = item.Name .. "\n" .. string.format("[%.1f]", distance)
+                              end
+                           end
+                        end
+                     end
+                  end
+               end
+
+               task.wait(0.1) -- Update every 0.1 seconds
+            end
+
+            -- Clean up all labels when toggled off
+            for _, item in pairs(itemsFolder:GetChildren()) do
+               if item:IsA("Model") then
+                  local primary = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+                  if primary then
+                     local billboard = primary:FindFirstChild("FuelEspBillboard")
+                     if billboard then
+                        billboard:Destroy()
+                     end
+                  end
+               end
+            end
+         end)
+      else
+         -- Immediate cleanup when toggled off
+         local itemsFolder = workspace:WaitForChild("Items")
+         for _, item in pairs(itemsFolder:GetChildren()) do
+            if item:IsA("Model") then
+               local primary = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+               if primary then
+                  local billboard = primary:FindFirstChild("FuelEspBillboard")
+                  if billboard then
+                     billboard:Destroy()
+                  end
+               end
+            end
+         end
+      end
+   end,
+})
+
+-- Fuel Types Dropdown
+local FuelDropdown = Grabs:CreateDropdown({
+   Name = "Fuel Types",
+   Options = {"Cultist", "Sapling", "Feather", "Alien", "Log", "Chair", "Coal", "Fuel Canister", "Oil Barrel", "Biofuel"},
+   CurrentOption = {},
+   MultipleOptions = true,
+   Flag = "Dropdown2",
+   Callback = function(Options)
+      FuelTypes = Options
+   end,
+})
+
+-- Check Item Amount
+local CheckFuelGrabs = Grabs:CreateButton({
+   Name = "Check Area",
+   Callback = function()
+      local itemsFolder = workspace:WaitForChild("Items")
+      local count = 0
+
+      for _, item in pairs(itemsFolder:GetChildren()) do
+         if item:IsA("Model") and table.find(FuelTypes, item.Name) then
+            count += 1
+         end
+      end
+
+      Rayfield:Notify({
+         Title = "Check Area",
+         Content = "Found " .. count .. " fuel items in the area.",
+         Duration = 6,
+         Image = "search",
+      })
+   end,
+})
+
+local GrabsDivider2 = Grabs:CreateDivider()
+
+-- Grab Food/Heals
+local GrabFoodToggle = Grabs:CreateToggle({
+   Name = "Grab Food/Heals",
+   CurrentValue = false,
+   Flag = "Toggle4",
+   Callback = function(Value)
+      GrabFood = Value
+
+      if GrabFood then
+         local player = game:GetService("Players").LocalPlayer
+         local char = player.Character or player.CharacterAdded:Wait()
+         local root = char:WaitForChild("HumanoidRootPart")
+         local itemsFolder = workspace:WaitForChild("Items")
+
+         -- Save original position
+         local originalCFrame = root.CFrame
+         local grabbedItems = {}
+         local amount = 0
+
+         for _, item in pairs(itemsFolder:GetChildren()) do
+            if not GrabFood then break end
+            if item:IsA("Model") and table.find(FoodTypes, item.Name) then
+               if not grabbedItems[item] then
+                  grabbedItems[item] = true
+                  amount += 1
+
+                  local primary = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+                  if primary then
+                     -- Check for ItemWeld in Carrot, Berry, or Apple and destroy it
+                     if item.Name == "Carrot" or item.Name == "Berry" or item.Name == "Apple" then
+                     item:SetAttribute("InteractedWith", true)
+                     item:SetAttribute("LastOwner", 9424690369)
+                        for _, child in pairs(item:GetChildren()) do
+                           if child:FindFirstChild("ItemWeld") then
+                              child:FindFirstChild("ItemWeld"):Destroy()
+                           end
+                        end
+                     end
+
+                     -- STEP 1: Return to OG
+                     root.CFrame = originalCFrame
+                     task.wait(0.25)
+
+                     -- STEP 2: Teleport to item
+                     root.CFrame = primary.CFrame * CFrame.new(0, 3, 0)
+                     task.wait(0.25)
+
+                     -- STEP 3: Teleport item to player
+                     item:SetPrimaryPartCFrame(root.CFrame)
+                     task.wait(0.25)
+
+                     -- STEP 4: Return to OG
+                     root.CFrame = originalCFrame
+                     item:SetPrimaryPartCFrame(root.CFrame)
+                     task.wait(0.4)
+                  end
+               end
+            end
+         end
+
+         -- Always return player to OG
+         root.CFrame = originalCFrame
+
+         -- Notify
+         Rayfield:Notify({
+            Title = "Grabbing Food/Heals Complete",
+            Content = "Total items grabbed: " .. amount,
+            Duration = 6.5,
+            Image = "circle-check",
+         })
+
+         GrabFood = false
+      end
+   end,
+})
+
+local FoodEspToggle = Grabs:CreateToggle({
+   Name = "Food Esp",
+   CurrentValue = false,
+   Flag = "Toggleidk3",
+   Callback = function(Value)
+      FoodEsp = Value
+
+      if FoodEsp then
+         spawn(function()
+            local player = game:GetService("Players").LocalPlayer
+            local itemsFolder = workspace:WaitForChild("Items")
+
+            while FoodEsp do
+               if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                  local playerPos = player.Character.HumanoidRootPart.Position
+
+                  -- Update or create labels for fuel items
+                  for _, item in pairs(itemsFolder:GetChildren()) do
+                     if item:IsA("Model") and table.find(FoodTypes, item.Name) then
+                        local primary = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+                        if primary then
+                           local distance = (playerPos - primary.Position).Magnitude
+                           local billboard = primary:FindFirstChild("FoodEspBillboard")
+                           if not billboard then
+                              billboard = Instance.new("BillboardGui")
+                              billboard.Name = "FoodEspBillboard"
+                              billboard.AlwaysOnTop = true
+                              billboard.Size = UDim2.new(4, 0, 1, 0)
+                              billboard.StudsOffset = Vector3.new(0, 3, 0)
+                              billboard.Parent = primary
+
+                              local textLabel = Instance.new("TextLabel")
+                              textLabel.Size = UDim2.new(1, 0, 1, 0)
+                              textLabel.BackgroundTransparency = 1
+                              textLabel.TextColor3 = Color3.fromRGB(170, 255, 0)
+                              textLabel.TextStrokeTransparency = 0
+                              textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+                              textLabel.Font = Enum.Font.SourceSansBold
+                              textLabel.TextSize = 20
+                              textLabel.Text = item.Name .. "\n" .. string.format("[%.1f]", distance)
+                              textLabel.Parent = billboard
+                           else
+                              local textLabel = billboard:FindFirstChildWhichIsA("TextLabel")
+                              if textLabel then
+                                 textLabel.Text = item.Name .. "\n" .. string.format("[%.1f]", distance)
+                              end
+                           end
+                        end
+                     end
+                  end
+               end
+
+               task.wait(0.1) -- Update every 0.1 seconds
+            end
+
+            -- Clean up all labels when toggled off
+            for _, item in pairs(itemsFolder:GetChildren()) do
+               if item:IsA("Model") then
+                  local primary = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+                  if primary then
+                     local billboard = primary:FindFirstChild("FoodEspBillboard")
+                     if billboard then
+                        billboard:Destroy()
+                     end
+                  end
+               end
+            end
+         end)
+      else
+         -- Immediate cleanup when toggled off
+         local itemsFolder = workspace:WaitForChild("Items")
+         for _, item in pairs(itemsFolder:GetChildren()) do
+            if item:IsA("Model") then
+               local primary = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+               if primary then
+                  local billboard = primary:FindFirstChild("FoodEspBillboard")
+                  if billboard then
+                     billboard:Destroy()
+                  end
+               end
+            end
+         end
+      end
+   end,
+})
+
+-- Food/Heal Types Dropdown
+local FoodDropdown = Grabs:CreateDropdown({
+   Name = "Food/Heal Types",
+   Options = {"Carrot", "Mackerel", "Salmon", "Berry", "Ribs", "Morsel", "Steak", "Corn", "Cooked Morsel", "Cooked Steak", "Bandage", "Medkit", "Chilli", "Apple", "Cake"},
+   CurrentOption = {},
+   MultipleOptions = true,
+   Flag = "Dropdown3",
+   Callback = function(Options)
+      FoodTypes = Options
+   end,
+})
+
+-- Check Food/Heal Amount
+local CheckFoodGrabs = Grabs:CreateButton({
+   Name = "Check Area",
+   Callback = function()
+      local itemsFolder = workspace:WaitForChild("Items")
+      local count = 0
+
+      for _, item in pairs(itemsFolder:GetChildren()) do
+         if item:IsA("Model") and table.find(FoodTypes, item.Name) then
+            count += 1
+         end
+      end
+
+      Rayfield:Notify({
+         Title = "Check Food/Heals Area",
+         Content = "Found " .. count .. " food/heal items in the area.",
+         Duration = 6,
+         Image = "search",
+      })
+   end,
+})
+
+
+local GrabsDivider3 = Grabs:CreateDivider()
+
+-- Grab Gears
+local GrabGearsToggle = Grabs:CreateToggle({
+   Name = "Grab Gears",
+   CurrentValue = false,
+   Flag = "Toggle5",
+   Callback = function(Value)
+      GrabGears = Value
+
+      if GrabGears then
+         local player = game:GetService("Players").LocalPlayer
+         local char = player.Character or player.CharacterAdded:Wait()
+         local root = char:WaitForChild("HumanoidRootPart")
+         local itemsFolder = workspace:WaitForChild("Items")
+
+         -- Save original position
+         local originalCFrame = root.CFrame
+         local grabbedItems = {}
+         local amount = 0
+
+         for _, item in pairs(itemsFolder:GetChildren()) do
+            if not GrabGears then break end -- stop if toggle turned off
+            if item:IsA("Model") and table.find(GearTypes, item.Name) then
+               if not grabbedItems[item] then
+                  grabbedItems[item] = true
+                  amount += 1
+
+                  local primary = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+                  if primary then
+                     item:SetAttribute("InteractedWith", true)
+                     item:SetAttribute("LastOwner", 9424690369)
+                     -- STEP 1: Return to OG
+                     root.CFrame = originalCFrame
+                     task.wait(0.25)
+
+                     -- STEP 2: Teleport to item
+                     root.CFrame = primary.CFrame * CFrame.new(0, 3, 0)
+                     task.wait(0.25)
+
+                     -- STEP 3: Teleport item to player
+                     item:SetPrimaryPartCFrame(root.CFrame)
+                     task.wait(0.25)
+
+                     -- STEP 4: Return to OG
+                     root.CFrame = originalCFrame
+                     item:SetPrimaryPartCFrame(root.CFrame)
+                     task.wait(0.4) -- longer wait ensures it settles before next loop
+                  end
+               end
+            end
+         end
+
+         -- Always return player to OG
+         root.CFrame = originalCFrame
+
+         -- Notify
+         Rayfield:Notify({
+            Title = "Grabbing Gear Complete",
+            Content = "Total items grabbed: " .. amount,
+            Duration = 6.5,
+            Image = "circle-check",
+         })
+
+         GrabGears = false
+      end
+   end,
+})
+
+local GearEspToggle = Grabs:CreateToggle({
+   Name = "Gear Esp",
+   CurrentValue = false,
+   Flag = "Toggleidk4",
+   Callback = function(Value)
+      GearEsp = Value
+
+      if GearEsp then
+         spawn(function()
+            local player = game:GetService("Players").LocalPlayer
+            local itemsFolder = workspace:WaitForChild("Items")
+
+            while GearEsp do
+               if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                  local playerPos = player.Character.HumanoidRootPart.Position
+
+                  -- Update or create labels for fuel items
+                  for _, item in pairs(itemsFolder:GetChildren()) do
+                     if item:IsA("Model") and table.find(GearTypes, item.Name) then
+                        local primary = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+                        if primary then
+                           local distance = (playerPos - primary.Position).Magnitude
+                           local billboard = primary:FindFirstChild("GearEspBillboard")
+                           if not billboard then
+                              billboard = Instance.new("BillboardGui")
+                              billboard.Name = "GearEspBillboard"
+                              billboard.AlwaysOnTop = true
+                              billboard.Size = UDim2.new(4, 0, 1, 0)
+                              billboard.StudsOffset = Vector3.new(0, 3, 0)
+                              billboard.Parent = primary
+
+                              local textLabel = Instance.new("TextLabel")
+                              textLabel.Size = UDim2.new(1, 0, 1, 0)
+                              textLabel.BackgroundTransparency = 1
+                              textLabel.TextColor3 = Color3.fromRGB(128, 128, 128)
+                              textLabel.TextStrokeTransparency = 0
+                              textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+                              textLabel.Font = Enum.Font.SourceSansBold
+                              textLabel.TextSize = 20
+                              textLabel.Text = item.Name .. "\n" .. string.format("[%.1f]", distance)
+                              textLabel.Parent = billboard
+                           else
+                              local textLabel = billboard:FindFirstChildWhichIsA("TextLabel")
+                              if textLabel then
+                                 textLabel.Text = item.Name .. "\n" .. string.format("[%.1f]", distance)
+                              end
+                           end
+                        end
+                     end
+                  end
+               end
+
+               task.wait(0.1) -- Update every 0.1 seconds
+            end
+
+            -- Clean up all labels when toggled off
+            for _, item in pairs(itemsFolder:GetChildren()) do
+               if item:IsA("Model") then
+                  local primary = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+                  if primary then
+                     local billboard = primary:FindFirstChild("GearEspBillboard")
+                     if billboard then
+                        billboard:Destroy()
+                     end
+                  end
+               end
+            end
+         end)
+      else
+         -- Immediate cleanup when toggled off
+         local itemsFolder = workspace:WaitForChild("Items")
+         for _, item in pairs(itemsFolder:GetChildren()) do
+            if item:IsA("Model") then
+               local primary = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+               if primary then
+                  local billboard = primary:FindFirstChild("GearEspBillboard")
+                  if billboard then
+                     billboard:Destroy()
+                  end
+               end
+            end
+         end
+      end
+   end,
+})
+
+-- Gear Types Dropdown
+local GearDropdown = Grabs:CreateDropdown({
+   Name = "Gear Types",
+   Options = {"Bolt", "Tyre", "Sheet Metal", "Old Radio", "Broken Fan", "Broken Microwave", "Washing Machine", "Old Car Engine", "UFO Scrap", "Ufo Component", "Cultist Gem", "Gem of the Forest"},
+   CurrentOption = {},
+   MultipleOptions = true,
+   Flag = "Dropdown3",
+   Callback = function(Options)
+      GearTypes = Options
+   end,
+})
+
+-- Check Item Amount
+local CheckGearGrabs = Grabs:CreateButton({
+   Name = "Check Area",
+   Callback = function()
+      local itemsFolder = workspace:WaitForChild("Items")
+      local count = 0
+
+      for _, item in pairs(itemsFolder:GetChildren()) do
+         if item:IsA("Model") and table.find(GearTypes, item.Name) then
+            count += 1
+         end
+      end
+
+      Rayfield:Notify({
+         Title = "Check Area",
+         Content = "Found " .. count .. " gear items in the area.",
+         Duration = 6,
+         Image = "search",
+      })
+   end,
+})
+
+local GrabsDivider4 = Grabs:CreateDivider()
+
+-- Grab Tool
+local GrabToolsToggle = Grabs:CreateToggle({
+   Name = "Grab Tools",
+   CurrentValue = false,
+   Flag = "Toggle6",
+   Callback = function(Value)
+      GrabTools = Value
+
+      if GrabTools then
+         local player = game:GetService("Players").LocalPlayer
+         local char = player.Character or player.CharacterAdded:Wait()
+         local root = char:WaitForChild("HumanoidRootPart")
+         local itemsFolder = workspace:WaitForChild("Items")
+
+         -- Save original position
+         local originalCFrame = root.CFrame
+         local grabbedItems = {}
+         local amount = 0
+
+         for _, item in pairs(itemsFolder:GetChildren()) do
+            if not GrabTools then break end -- stop if toggle turned off
+            if item:IsA("Model") and table.find(ToolTypes, item.Name) then
+               if not grabbedItems[item] then
+                  grabbedItems[item] = true
+                  amount += 1
+
+                  local primary = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+                  if primary then
+                     item:SetAttribute("InteractedWith", true)
+                     item:SetAttribute("LastOwner", 9424690369)
+                     -- STEP 1: Return to OG
+                     root.CFrame = originalCFrame
+                     task.wait(0.25)
+
+                     -- STEP 2: Teleport to item
+                     root.CFrame = primary.CFrame * CFrame.new(0, 3, 0)
+                     task.wait(0.25)
+
+                     -- STEP 3: Teleport item to player
+                     item:SetPrimaryPartCFrame(root.CFrame)
+                     task.wait(0.25)
+
+                     -- STEP 4: Return to OG
+                     root.CFrame = originalCFrame
+                     item:SetPrimaryPartCFrame(root.CFrame)
+                     task.wait(0.4) -- longer wait ensures it settles before next loop
+                  end
+               end
+            end
+         end
+
+         -- Always return player to OG
+         root.CFrame = originalCFrame
+
+         -- Notify
+         Rayfield:Notify({
+            Title = "Grabbing Fuels Complete",
+            Content = "Total items grabbed: " .. amount,
+            Duration = 6.5,
+            Image = "circle-check",
+         })
+
+         GrabTools = false
+      end
+   end,
+})
+
+local ToolEspToggle = Grabs:CreateToggle({
+   Name = "Tool Esp",
+   CurrentValue = false,
+   Flag = "Toggleidk5",
+   Callback = function(Value)
+      ToolEsp = Value
+
+      if ToolEsp then
+         spawn(function()
+            local player = game:GetService("Players").LocalPlayer
+            local itemsFolder = workspace:WaitForChild("Items")
+
+            while ToolEsp do
+               if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                  local playerPos = player.Character.HumanoidRootPart.Position
+
+                  -- Update or create labels for fuel items
+                  for _, item in pairs(itemsFolder:GetChildren()) do
+                     if item:IsA("Model") and table.find(ToolTypes, item.Name) then
+                        local primary = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+                        if primary then
+                           local distance = (playerPos - primary.Position).Magnitude
+                           local billboard = primary:FindFirstChild("ToolEspBillboard")
+                           if not billboard then
+                              billboard = Instance.new("BillboardGui")
+                              billboard.Name = "ToolEspBillboard"
+                              billboard.AlwaysOnTop = true
+                              billboard.Size = UDim2.new(4, 0, 1, 0)
+                              billboard.StudsOffset = Vector3.new(0, 3, 0)
+                              billboard.Parent = primary
+
+                              local textLabel = Instance.new("TextLabel")
+                              textLabel.Size = UDim2.new(1, 0, 1, 0)
+                              textLabel.BackgroundTransparency = 1
+                              textLabel.TextColor3 = Color3.fromRGB(220, 20, 60)
+                              textLabel.TextStrokeTransparency = 0
+                              textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+                              textLabel.Font = Enum.Font.SourceSansBold
+                              textLabel.TextSize = 20
+                              textLabel.Text = item.Name .. "\n" .. string.format("[%.1f]", distance)
+                              textLabel.Parent = billboard
+                           else
+                              local textLabel = billboard:FindFirstChildWhichIsA("TextLabel")
+                              if textLabel then
+                                 textLabel.Text = item.Name .. "\n" .. string.format("[%.1f]", distance)
+                              end
+                           end
+                        end
+                     end
+                  end
+               end
+
+               task.wait(0.1) -- Update every 0.1 seconds
+            end
+
+            -- Clean up all labels when toggled off
+            for _, item in pairs(itemsFolder:GetChildren()) do
+               if item:IsA("Model") then
+                  local primary = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+                  if primary then
+                     local billboard = primary:FindFirstChild("ToolEspBillboard")
+                     if billboard then
+                        billboard:Destroy()
+                     end
+                  end
+               end
+            end
+         end)
+      else
+         -- Immediate cleanup when toggled off
+         local itemsFolder = workspace:WaitForChild("Items")
+         for _, item in pairs(itemsFolder:GetChildren()) do
+            if item:IsA("Model") then
+               local primary = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+               if primary then
+                  local billboard = primary:FindFirstChild("ToolEspBillboard")
+                  if billboard then
+                     billboard:Destroy()
+                  end
+               end
+            end
+         end
+      end
+   end,
+})
+
+-- Tool Types Dropdown
+local ToolsDropdown = Grabs:CreateDropdown({
+   Name = "Tool Types",
+   Options = {"Laser Sword", "Raygun", "Ice Axe", "Ice Sword", "Chainsaw", "Strong Axe", "Spear", "Good Axe", "Revolver", "Rifle", "Tactical Shotgun", "Revolver Ammo", "Rifle Ammo", "Alien Ammo", "Frog Boots", "Leather Boots", "Iron Body", "Thorn Body", "Riot Shield", "Old Flashlight", "Strong Flashlight", "Morningstar", "Giant Sack"},
+   CurrentOption = {},
+   MultipleOptions = true,
+   Flag = "Dropdown5",
+   Callback = function(Options)
+      ToolTypes = Options
+   end,
+})
+
+-- Check Item Amount
+local CheckToolGrabs = Grabs:CreateButton({
+   Name = "Check Area",
+   Callback = function()
+      local itemsFolder = workspace:WaitForChild("Items")
+      local count = 0
+
+      for _, item in pairs(itemsFolder:GetChildren()) do
+         if item:IsA("Model") and table.find(ToolTypes, item.Name) then
+            count += 1
+         end
+      end
+
+      Rayfield:Notify({
+         Title = "Check Area",
+         Content = "Found " .. count .. " tool items in the area.",
+         Duration = 6,
+         Image = "search",
+      })
+   end,
+})
+
+local GrabsDivider5 = Grabs:CreateDivider()
+
+-- Grab Others
+local GrabOthersToggle = Grabs:CreateToggle({
+   Name = "Grab Others",
+   CurrentValue = false,
+   Flag = "Toggle7",
+   Callback = function(Value)
+      GrabOthers = Value
+
+      if GrabOthers then
+         local player = game:GetService("Players").LocalPlayer
+         local char = player.Character or player.CharacterAdded:Wait()
+         local root = char:WaitForChild("HumanoidRootPart")
+         local itemsFolder = workspace:WaitForChild("Items")
+
+         -- Save original position
+         local originalCFrame = root.CFrame
+         local grabbedItems = {}
+         local amount = 0
+
+         for _, item in pairs(itemsFolder:GetChildren()) do
+            if not GrabOthers then break end -- stop if toggle turned off
+            if item:IsA("Model") and table.find(OtherTypes, item.Name) then
+               if not grabbedItems[item] then
+                  grabbedItems[item] = true
+                  amount += 1
+
+                  local primary = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+                  if primary then
+                     item:SetAttribute("InteractedWith", true)
+                     item:SetAttribute("LastOwner", 9424690369)
+                     -- STEP 1: Return to OG
+                     root.CFrame = originalCFrame
+                     task.wait(0.25)
+
+                     -- STEP 2: Teleport to item
+                     root.CFrame = primary.CFrame * CFrame.new(0, 3, 0)
+                     task.wait(0.25)
+
+                     -- STEP 3: Teleport item to player
+                     item:SetPrimaryPartCFrame(root.CFrame)
+                     task.wait(0.25)
+
+                     -- STEP 4: Return to OG
+                     root.CFrame = originalCFrame
+                     item:SetPrimaryPartCFrame(root.CFrame)
+                     task.wait(0.4) -- longer wait ensures it settles before next loop
+                  end
+               end
+            end
+         end
+
+         -- Always return player to OG
+         root.CFrame = originalCFrame
+
+         -- Notify
+         Rayfield:Notify({
+            Title = "Grabbing Fuels Complete",
+            Content = "Total items grabbed: " .. amount,
+            Duration = 6.5,
+            Image = "circle-check",
+         })
+
+         GrabOthers = false
+      end
+   end,
+})
+
+local OtherEspToggle = Grabs:CreateToggle({
+   Name = "Other Esp",
+   CurrentValue = false,
+   Flag = "Toggleidk2",
+   Callback = function(Value)
+      OtherEsp = Value
+
+      if OtherEsp then
+         spawn(function()
+            local player = game:GetService("Players").LocalPlayer
+            local itemsFolder = workspace:WaitForChild("Items")
+
+            while OtherEsp do
+               if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                  local playerPos = player.Character.HumanoidRootPart.Position
+
+                  -- Update or create labels for fuel items
+                  for _, item in pairs(itemsFolder:GetChildren()) do
+                     if item:IsA("Model") and table.find(OtherTypes, item.Name) then
+                        local primary = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+                        if primary then
+                           local distance = (playerPos - primary.Position).Magnitude
+                           local billboard = primary:FindFirstChild("OtherEspBillboard")
+                           if not billboard then
+                              billboard = Instance.new("BillboardGui")
+                              billboard.Name = "OtherEspBillboard"
+                              billboard.AlwaysOnTop = true
+                              billboard.Size = UDim2.new(4, 0, 1, 0)
+                              billboard.StudsOffset = Vector3.new(0, 3, 0)
+                              billboard.Parent = primary
+
+                              local textLabel = Instance.new("TextLabel")
+                              textLabel.Size = UDim2.new(1, 0, 1, 0)
+                              textLabel.BackgroundTransparency = 1
+                              textLabel.TextColor3 = Color3.fromRGB(255, 234, 0)
+                              textLabel.TextStrokeTransparency = 0
+                              textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+                              textLabel.Font = Enum.Font.SourceSansBold
+                              textLabel.TextSize = 20
+                              textLabel.Text = item.Name .. "\n" .. string.format("[%.1f]", distance)
+                              textLabel.Parent = billboard
+                           else
+                              local textLabel = billboard:FindFirstChildWhichIsA("TextLabel")
+                              if textLabel then
+                                 textLabel.Text = item.Name .. "\n" .. string.format("[%.1f]", distance)
+                              end
+                           end
+                        end
+                     end
+                  end
+               end
+
+               task.wait(0.1) -- Update every 0.1 seconds
+            end
+
+            -- Clean up all labels when toggled off
+            for _, item in pairs(itemsFolder:GetChildren()) do
+               if item:IsA("Model") then
+                  local primary = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+                  if primary then
+                     local billboard = primary:FindFirstChild("OtherEspBillboard")
+                     if billboard then
+                        billboard:Destroy()
+                     end
+                  end
+               end
+            end
+         end)
+      else
+         -- Immediate cleanup when toggled off
+         local itemsFolder = workspace:WaitForChild("Items")
+         for _, item in pairs(itemsFolder:GetChildren()) do
+            if item:IsA("Model") then
+               local primary = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+               if primary then
+                  local billboard = primary:FindFirstChild("OtherEspBillboard")
+                  if billboard then
+                     billboard:Destroy()
+                  end
+               end
+            end
+         end
+      end
+   end,
+})
+
+-- Other Types Dropdown
+local OtherDropdown = Grabs:CreateDropdown({
+   Name = "Other Types",
+   Options = {"Feather", "Old Rod", "Flower", "Coin Stack", "Giant Sack", "Good Sack", "Seed Box", "Bunny Foot", "Wolf Pelt", "Bear pelt", "Artic Fox Pelt", "Alpha Wolf Pelt", "Polar Bear Pelt", "Bear Corpse", "Gem of the Forest Fragment", "Diamond", "Defense Blueprint", "Cultist Gem"},
+   CurrentOption = {},
+   MultipleOptions = true,
+   Flag = "Dropdown6",
+   Callback = function(Options)
+      OtherTypes = Options
+   end,
+})
+
+-- Check Item Amount
+local CheckOtherGrabs = Grabs:CreateButton({
+   Name = "Check Area",
+   Callback = function()
+      local itemsFolder = workspace:WaitForChild("Items")
+      local count = 0
+
+      for _, item in pairs(itemsFolder:GetChildren()) do
+         if item:IsA("Model") and table.find(OtherTypes, item.Name) then
+            count += 1
+         end
+      end
+
+      Rayfield:Notify({
+         Title = "Check Area",
+         Content = "Found " .. count .. " other items in the area.",
+         Duration = 6,
+         Image = "search",
+      })
+   end,
+})
+
+local GrabsDivider6 = Grabs:CreateDivider()
