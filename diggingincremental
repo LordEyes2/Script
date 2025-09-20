@@ -2,7 +2,7 @@ local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 -- loadstring: loadstring(game:HttpGet('https://raw.githubusercontent.com/LordEyes2/Script/refs/heads/main/diggingincremental'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Personal Hub V1.2",
+   Name = "Personal Hub V1.3",
    Icon = 0,
    LoadingTitle = "Rayfield Interface Suite",
    LoadingSubtitle = "by Sirius",
@@ -244,8 +244,7 @@ local Dropdown3 = Admin:CreateDropdown({
    MultipleOptions = false,
    Flag = "SelectedPlayer",
    Callback = function(Option)
-      selectedPlayer = tostring(Option) -- Store selected player
-        print(selectedPlayer)
+      selectedPlayer = Option[1] -- Extract the first (and only) selected player as a string
    end,
 })
 
@@ -265,8 +264,7 @@ local Dropdown4 = Admin:CreateDropdown({
    MultipleOptions = false,
    Flag = "SelectedOption",
    Callback = function(Option)
-      selectedOption = tostring(Option) -- Store selected option
-        print(selectedOption)
+      selectedOption = Option[1] -- Extract the first (and only) selected option as a string
    end,
 })
 
@@ -278,12 +276,11 @@ local Dropdown5 = Admin:CreateDropdown({
    MultipleOptions = false,
    Flag = "SelectedStat",
    Callback = function(Option)
-      selectedStat = tostring(Option) -- Store selected stat
-        print(selectedStat)
+      selectedStat = Option[1] -- Extract the first (and only) selected stat as a string
    end,
 })
 
--- Input for stat amount
+-- Input for stat amount (unchanged since it works)
 local Input1 = Admin:CreateInput({
    Name = "Stat Amount",
    CurrentValue = "",
@@ -292,7 +289,6 @@ local Input1 = Admin:CreateInput({
    Flag = "InputAmount",
    Callback = function(Text)
       statAmount = tonumber(Text) -- Store input as a number (nil if invalid)
-        print(statAmount)
    end,
 })
 
@@ -319,16 +315,8 @@ local Button2 = Admin:CreateButton({
       end
 
       -- Execute the appropriate action
-      if selectedOption == "Set Stat" then
-         safeFireAdminRemote("Stat", selectedPlayer, selectedStat, statAmount)
-         print(selectedPlayer)
-         print(selectedStat)
-         print(statAmount)
-      elseif selectedOption == "Stat Reset" then
-         safeFireAdminRemote("Reset", selectedPlayer, selectedStat, 0) -- Amount is 0 for reset
-         print(selectedPlayer)
-         print(selectedStat)
-         print(statAmount)
-      end
+      local action = (selectedOption == "Set Stat") and "Stat" or "Reset"
+      local amount = (selectedOption == "Set Stat") and statAmount or 0
+      safeFireAdminRemote(action, selectedPlayer, selectedStat, amount)
    end,
 })
