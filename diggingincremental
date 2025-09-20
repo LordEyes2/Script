@@ -1,6 +1,5 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 -- loadstring: loadstring(game:HttpGet('https://raw.githubusercontent.com/LordEyes2/Script/refs/heads/main/diggingincremental'))()
--- Skibidi rizz Ohio Gyatt
 
 local Window = Rayfield:CreateWindow({
    Name = "Personal Hub V2.1",
