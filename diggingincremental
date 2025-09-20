@@ -1,102 +1,167 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
--- loadstring: loadstring(game:HttpGet('https://raw.githubusercontent.com/LordEyes2/Script/refs/heads/main/diggingincremental'))()
 
 local Window = Rayfield:CreateWindow({
    Name = "Rayfield Example Window",
-   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   Icon = 0,
    LoadingTitle = "Rayfield Interface Suite",
    LoadingSubtitle = "by Sirius",
-   ShowText = "Rayfield", -- for mobile users to unhide rayfield, change if you'd like
-   Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
-
-   ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
-
+   ShowText = "Rayfield",
+   Theme = "Default",
+   ToggleUIKeybind = "K",
    DisableRayfieldPrompts = false,
-   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
-
+   DisableBuildWarnings = false,
    ConfigurationSaving = {
       Enabled = true,
-      FolderName = nil, -- Create a custom folder for your hub/game
+      FolderName = nil,
       FileName = "Big Hub"
    },
-
    Discord = {
-      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
-      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
-      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+      Enabled = false,
+      Invite = "noinvitelink",
+      RememberJoins = true
    },
-
-   KeySystem = false, -- Set this to true to use our key system
+   KeySystem = false,
    KeySettings = {
       Title = "Untitled",
       Subtitle = "Key System",
-      Note = "No method of obtaining the key is provided", -- Use this to tell the user how to get a key
-      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
-      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
-      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
-      Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+      Note = "No method of obtaining the key is provided",
+      FileName = "Key",
+      SaveKey = true,
+      GrabKeyFromSite = false,
+      Key = {"Hello"}
    }
 })
 
-local Tab = Window:CreateTab("Main", 4483362458) -- Title, Image
+local Tab = Window:CreateTab("Main", 4483362458)
 local Section = Tab:CreateSection("Main")
 local Divider = Tab:CreateDivider()
 
+-- Variables to track toggle states and selections
+local autoDig = false
 local upgradesSelected = {}
 local autoUpgrade = false
 local rebirthUpgradesSelected = {}
 local autoRebirthUpgrade = false
 local autoRebirth = false
 
+-- Reference to ReplicatedStorage and Remotes
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Remotes = ReplicatedStorage:WaitForChild("Remotes", 10)
+
+-- Helper function to safely fire a remote
+local function safeFireRemote(remoteName, ...)
+   if Remotes then
+      local remote = Remotes:FindFirstChild(remoteName)
+      if remote then
+         remote:FireServer(...)
+      else
+         warn("Remote '" .. remoteName .. "' not found.")
+      end
+   else
+      warn("Remotes folder not found in ReplicatedStorage.")
+   end
+end
+
+-- Dropdown for Upgrades
 local Dropdown1 = Tab:CreateDropdown({
    Name = "Upgrades",
-   Options = {"1","2", "3", "4"},
+   Options = {"1", "2", "3", "4"},
    CurrentOption = {},
    MultipleOptions = true,
-   Flag = "UpgradesSelected", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Flag = "UpgradesSelected",
    Callback = function(Options)
-
+      upgradesSelected = Options -- Update the selected upgrades table
    end,
 })
 
+-- Toggle for Auto Upgrade
 local Toggle1 = Tab:CreateToggle({
    Name = "Auto Upgrade",
    CurrentValue = false,
-   Flag = "AutoUpgrade", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Flag = "AutoUpgrade",
    Callback = function(Value)
-
+      autoUpgrade = Value
+      if autoUpgrade then
+         spawn(function()
+            while autoUpgrade do
+               for _, upgrade in ipairs(upgradesSelected) do
+                  safeFireRemote("Upgrade", "DirtUpgrades", tonumber(upgrade), 1)
+               end
+               task.wait(0.1) -- Small delay to prevent server overload
+            end
+         end)
+      end
    end,
 })
 
 local Divider2 = Tab:CreateDivider()
 
+-- Dropdown for Rebirth Upgrades
 local Dropdown2 = Tab:CreateDropdown({
    Name = "Rebirth Upgrades",
-   Options = {"1","2", "3", "4"},
+   Options = {"1", "2", "3", "4"},
    CurrentOption = {},
    MultipleOptions = true,
-   Flag = "RebirthUpgradesSelected", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Flag = "RebirthUpgradesSelected",
    Callback = function(Options)
-
+      rebirthUpgradesSelected = Options -- Update the selected rebirth upgrades table
    end,
 })
 
+-- Toggle for Auto Rebirth Upgrade
 local Toggle2 = Tab:CreateToggle({
    Name = "Auto Rebirth Upgrade",
    CurrentValue = false,
-   Flag = "AutoRebirthUpgrade", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Flag = "AutoRebirthUpgrade",
    Callback = function(Value)
-        
+      autoRebirthUpgrade = Value
+      if autoRebirthUpgrade then
+         spawn(function()
+            while autoRebirthUpgrade do
+               for _, upgrade in ipairs(rebirthUpgradesSelected) do
+                  safeFireRemote("Upgrade", "RebirthUpgrades", tonumber(upgrade), 1)
+               end
+               task.wait(0.1) -- Small delay to prevent server overload
+            end
+         end)
+      end
    end,
 })
 
 local Divider3 = Tab:CreateDivider()
 
+-- Toggle for Auto Rebirth
 local Toggle3 = Tab:CreateToggle({
    Name = "Auto Rebirth",
    CurrentValue = false,
-   Flag = "AutoRebirth", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Flag = "AutoRebirth",
    Callback = function(Value)
-        
+      autoRebirth = Value
+      if autoRebirth then
+         spawn(function()
+            while autoRebirth do
+               safeFireRemote("Rebirth")
+               task.wait(0.1) -- Small delay to prevent server overload
+            end
+         end)
+      end
+   end,
+})
+
+-- Toggle for Auto Dig
+local Toggle4 = Tab:CreateToggle({
+   Name = "Auto Dig",
+   CurrentValue = false,
+   Flag = "AutoDig",
+   Callback = function(Value)
+      autoDig = Value
+      if autoDig then
+         spawn(function()
+            while autoDig do
+               safeFireRemote("Dig")
+               task.wait(0.1) -- Small delay to prevent server overload
+            end
+         end)
+      end
    end,
 })
