@@ -317,8 +317,14 @@ local Button2 = Admin:CreateButton({
       -- Execute the appropriate action
       if selectedOption == "Set Stat" then
          safeFireAdminRemote("Stat", selectedPlayer, selectedStat, statAmount)
+         print(selectedPlayer)
+         print(selectedStat)
+         print(statAmount)
       elseif selectedOption == "Stat Reset" then
          safeFireAdminRemote("Reset", selectedPlayer, selectedStat, 0) -- Amount is 0 for reset
+         print(selectedPlayer)
+         print(selectedStat)
+         print(statAmount)
       end
    end,
 })
