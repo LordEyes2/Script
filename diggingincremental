@@ -53,7 +53,7 @@ local Dropdown1 = Tab:CreateDropdown({
    Options = {"1","2", "3", "4"},
    CurrentOption = {},
    MultipleOptions = true,
-   Flag = "Dropdown1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Flag = "UpgradesSelected", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
    Callback = function(Options)
 
    end,
@@ -62,7 +62,7 @@ local Dropdown1 = Tab:CreateDropdown({
 local Toggle1 = Tab:CreateToggle({
    Name = "Auto Upgrade",
    CurrentValue = false,
-   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Flag = "AutoUpgrade", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
    Callback = function(Value)
 
    end,
@@ -75,7 +75,7 @@ local Dropdown2 = Tab:CreateDropdown({
    Options = {"1","2", "3", "4"},
    CurrentOption = {},
    MultipleOptions = true,
-   Flag = "Dropdown2", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Flag = "RebirthUpgradesSelected", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
    Callback = function(Options)
 
    end,
@@ -84,7 +84,7 @@ local Dropdown2 = Tab:CreateDropdown({
 local Toggle2 = Tab:CreateToggle({
    Name = "Auto Rebirth Upgrade",
    CurrentValue = false,
-   Flag = "Toggle2", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Flag = "AutoRebirthUpgrade", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
    Callback = function(Value)
         
    end,
@@ -95,7 +95,7 @@ local Divider3 = Tab:CreateDivider()
 local Toggle3 = Tab:CreateToggle({
    Name = "Auto Rebirth",
    CurrentValue = false,
-   Flag = "Toggle3", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Flag = "AutoRebirth", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
    Callback = function(Value)
         
    end,
