@@ -1,4 +1,5 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+-- loadstring: loadstring(game:HttpGet('https://raw.githubusercontent.com/LordEyes2/Script/refs/heads/main/diggingincremental'))()
 
 local Window = Rayfield:CreateWindow({
    Name = "Rayfield Example Window",
@@ -67,6 +68,8 @@ local Toggle = Tab:CreateToggle({
    end,
 })
 
+local Divider2 = Tab:CreateDivider()
+
 local Dropdown = Tab:CreateDropdown({
    Name = "Rebirth Upgrades",
    Options = {"1","2", "3", "4"},
@@ -86,6 +89,8 @@ local Toggle = Tab:CreateToggle({
         
    end,
 })
+
+local Divider3 = Tab:CreateDivider()
 
 local Toggle = Tab:CreateToggle({
    Name = "Auto Rebirth",
