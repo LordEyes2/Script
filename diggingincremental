@@ -36,8 +36,13 @@ local Tab = Window:CreateTab("Main", 4483362458)
 local Section = Tab:CreateSection("Main")
 local Divider = Tab:CreateDivider()
 
+local Scripts = Window:CreateTab("Scripts", 4483362458)
+local ScriptsSection = Scripts:CreateSection("Scripts")
+local ScriptsDivider = Scripts:CreateDivider()
+
 -- Variables to track toggle states and selections
 local autoDig = false
+local autoRoll = false
 local upgradesSelected = {}
 local autoUpgrade = false
 local rebirthUpgradesSelected = {}
@@ -163,5 +168,30 @@ local Toggle4 = Tab:CreateToggle({
             end
          end)
       end
+   end,
+})
+
+-- Toggle for Auto Dig
+local Toggle5 = Tab:CreateToggle({
+   Name = "Auto Roll",
+   CurrentValue = false,
+   Flag = "AutoRoll",
+   Callback = function(Value)
+      autoRoll = Value
+      if autoRoll then
+         spawn(function()
+            while autoRoll do
+               safeFireRemote("RarityRoll")
+               task.wait(0.1) -- Small delay to prevent server overload
+            end
+         end)
+      end
+   end,
+})
+
+local Button1 = Scripts:CreateButton({
+   Name = "Infinite Yield",
+   Callback = function()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
    end,
 })
