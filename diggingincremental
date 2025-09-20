@@ -2,7 +2,7 @@ local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 -- loadstring: loadstring(game:HttpGet('https://raw.githubusercontent.com/LordEyes2/Script/refs/heads/main/diggingincremental'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Personal Hub V2.0",
+   Name = "Personal Hub V2.1",
    Icon = 0,
    LoadingTitle = "Rayfield Interface Suite",
    LoadingSubtitle = "by Sirius",
@@ -271,7 +271,7 @@ local Dropdown4 = Admin:CreateDropdown({
 -- Dropdown for selecting a stat
 local Dropdown5 = Admin:CreateDropdown({
    Name = "Selected Stat",
-   Options = {"Dirt", "Exp", "Level", "Oil", "Rarity", "Rebirths", "DiggingSpeed", "DirtLuck", "DirtValue", "ExpMulti", "RebirthMulti", "DigLuck", "DigSpeed", "GamepassPack", "RarityLuck"},
+   Options = {"Dirt", "Exp", "Level", "Oil", "Rarity", "Rebirths", "DiggingSpeed", "DirtLuck", "DirtValue", "ExpMulti", "RebirthMult", "DigLuck", "DigSpeed", "GamepassPack", "RarityLuck"},
    CurrentOption = nil,
    MultipleOptions = false,
    Flag = "SelectedStat",
