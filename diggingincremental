@@ -2,7 +2,7 @@ local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 -- loadstring: loadstring(game:HttpGet('https://raw.githubusercontent.com/LordEyes2/Script/refs/heads/main/diggingincremental'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Personal Hub V1.0",
+   Name = "Personal Hub V1.1",
    Icon = 0,
    LoadingTitle = "Rayfield Interface Suite",
    LoadingSubtitle = "by Sirius",
@@ -245,6 +245,7 @@ local Dropdown3 = Admin:CreateDropdown({
    Flag = "SelectedPlayer",
    Callback = function(Option)
       selectedPlayer = Option -- Store selected player
+        print(selectedPlayer)
    end,
 })
 
@@ -265,6 +266,7 @@ local Dropdown4 = Admin:CreateDropdown({
    Flag = "SelectedOption",
    Callback = function(Option)
       selectedOption = Option -- Store selected option
+        print(selectedOption)
    end,
 })
 
@@ -277,6 +279,7 @@ local Dropdown5 = Admin:CreateDropdown({
    Flag = "SelectedStat",
    Callback = function(Option)
       selectedStat = Option -- Store selected stat
+        print(selectedStat)
    end,
 })
 
@@ -289,6 +292,7 @@ local Input1 = Admin:CreateInput({
    Flag = "InputAmount",
    Callback = function(Text)
       statAmount = tonumber(Text) -- Store input as a number (nil if invalid)
+        print(statAmount)
    end,
 })
 
