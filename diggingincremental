@@ -1,4 +1,5 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+-- loadstring: loadstring(game:HttpGet('https://raw.githubusercontent.com/LordEyes2/Script/refs/heads/main/diggingincremental'))()
 
 local Window = Rayfield:CreateWindow({
    Name = "Rayfield Example Window",
@@ -35,6 +36,10 @@ local Window = Rayfield:CreateWindow({
 local Tab = Window:CreateTab("Main", 4483362458)
 local Section = Tab:CreateSection("Main")
 local Divider = Tab:CreateDivider()
+
+local Admin = Window:CreateTab("Admin", 4483362458)
+local AdminSection = Admin:CreateSection("Admin")
+local AdminDivider = Admin:CreateDivider()
 
 local Scripts = Window:CreateTab("Scripts", 4483362458)
 local ScriptsSection = Scripts:CreateSection("Scripts")
@@ -193,5 +198,127 @@ local Button1 = Scripts:CreateButton({
    Name = "Infinite Yield",
    Callback = function()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+   end,
+})
+
+-- ADMIN SHIT --
+-- Variables to track selections
+local selectedPlayer = nil
+local selectedOption = nil
+local selectedStat = nil
+local statAmount = nil
+
+-- Reference to Players and ReplicatedStorage services
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Remotes = ReplicatedStorage:WaitForChild("Remotes", 10)
+
+-- Helper function to safely fire the Admin remote
+local function safeFireAdminRemote(action, playerName, stat, amount)
+   if Remotes then
+      local adminRemote = Remotes:FindFirstChild("Admin")
+      if adminRemote then
+         adminRemote:FireServer(action, playerName, stat, amount)
+      else
+         warn("Admin remote not found in ReplicatedStorage.Remotes")
+      end
+   else
+      warn("Remotes folder not found in ReplicatedStorage")
+   end
+end
+
+-- Helper function to get the list of player names
+local function getPlayerNames()
+   local playerNames = {}
+   for _, player in ipairs(Players:GetPlayers()) do
+      table.insert(playerNames, player.Name)
+   end
+   return playerNames
+end
+
+-- Dropdown for selecting a player
+local Dropdown3 = Admin:CreateDropdown({
+   Name = "Selected Player",
+   Options = getPlayerNames(), -- Initialize with current players
+   CurrentOption = nil,
+   MultipleOptions = false,
+   Flag = "SelectedPlayer",
+   Callback = function(Option)
+      selectedPlayer = Option -- Store selected player
+   end,
+})
+
+-- Update player dropdown when players join or leave
+Players.PlayerAdded:Connect(function()
+   Dropdown3:SetOptions(getPlayerNames()) -- Refresh player list
+end)
+Players.PlayerRemoving:Connect(function()
+   Dropdown3:SetOptions(getPlayerNames()) -- Refresh player list
+end)
+
+-- Dropdown for selecting an option (Set Stat or Stat Reset)
+local Dropdown4 = Admin:CreateDropdown({
+   Name = "Selected Option",
+   Options = {"Set Stat", "Stat Reset"},
+   CurrentOption = nil,
+   MultipleOptions = false,
+   Flag = "SelectedOption",
+   Callback = function(Option)
+      selectedOption = Option -- Store selected option
+   end,
+})
+
+-- Dropdown for selecting a stat
+local Dropdown5 = Admin:CreateDropdown({
+   Name = "Selected Stat",
+   Options = {"Dirt", "Exp", "Level", "Oil", "Rarity", "Rebirths"},
+   CurrentOption = nil,
+   MultipleOptions = false,
+   Flag = "SelectedStat",
+   Callback = function(Option)
+      selectedStat = Option -- Store selected stat
+   end,
+})
+
+-- Input for stat amount
+local Input1 = Admin:CreateInput({
+   Name = "Stat Amount",
+   CurrentValue = "",
+   PlaceholderText = "None",
+   RemoveTextAfterFocusLost = false,
+   Flag = "InputAmount",
+   Callback = function(Text)
+      statAmount = tonumber(Text) -- Store input as a number (nil if invalid)
+   end,
+})
+
+-- Button to execute the action
+local Button2 = Admin:CreateButton({
+   Name = "Execute",
+   Callback = function()
+      -- Validate selections
+      if not selectedPlayer then
+         warn("No player selected")
+         return
+      end
+      if not selectedOption then
+         warn("No option selected")
+         return
+      end
+      if not selectedStat then
+         warn("No stat selected")
+         return
+      end
+      if selectedOption == "Set Stat" and not statAmount then
+         warn("Invalid or missing stat amount")
+         return
+      end
+
+      -- Execute the appropriate action
+      if selectedOption == "Set Stat" then
+         safeFireAdminRemote("Stat", selectedPlayer, selectedStat, statAmount)
+      elseif selectedOption == "Stat Reset" then
+         safeFireAdminRemote("Reset", selectedPlayer, selectedStat, 0) -- Amount is 0 for reset
+      end
    end,
 })
