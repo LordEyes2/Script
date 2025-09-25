@@ -1,6 +1,7 @@
 -- RayField
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
--- You stupid...
+
+print("You're gay")
 
 -- RayField UI
 local Window = Rayfield:CreateWindow({
