@@ -1,6 +1,6 @@
 -- RayField
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
--- If you read this ur bald
+-- You stupid...
 
 -- RayField UI
 local Window = Rayfield:CreateWindow({
