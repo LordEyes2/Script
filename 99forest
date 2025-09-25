@@ -1288,7 +1288,7 @@ local ToolEspToggle = Grabs:CreateToggle({
 -- Tool Types Dropdown
 local ToolsDropdown = Grabs:CreateDropdown({
    Name = "Tool Types",
-   Options = {"Laser Sword", "Raygun", "Ice Axe", "Ice Sword", "Chainsaw", "Strong Axe", "Spear", "Good Axe", "Revolver", "Rifle", "Tactical Shotgun", "Revolver Ammo", "Rifle Ammo", "Alien Ammo", "Frog Boots", "Leather Boots", "Iron Body", "Thorn Body", "Riot Shield", "Old Flashlight", "Strong Flashlight", "Morningstar", "Giant Sack"},
+   Options = {"Laser Sword", "Raygun", "Ice Axe", "Ice Sword", "Chainsaw", "Strong Axe", "Spear", "Good Axe", "Revolver", "Rifle", "Tactical Shotgun", "Revolver Ammo", "Rifle Ammo", "Alien Ammo", "Frog Boots", "Leather Boots", "Iron Body", "Thorn Body", "Riot Shield", "Old Flashlight", "Strong Flashlight", "Morningstar", "Giant Sack", "Infernal Sword, "Infernal Crossbow", "Infernal Sack", "Crossbow"},
    CurrentOption = {},
    MultipleOptions = true,
    Flag = "Dropdown5",
@@ -1477,7 +1477,7 @@ local OtherEspToggle = Grabs:CreateToggle({
 -- Other Types Dropdown
 local OtherDropdown = Grabs:CreateDropdown({
    Name = "Other Types",
-   Options = {"Feather", "Old Rod", "Flower", "Coin Stack", "Giant Sack", "Good Sack", "Seed Box", "Bunny Foot", "Wolf Pelt", "Bear pelt", "Artic Fox Pelt", "Alpha Wolf Pelt", "Polar Bear Pelt", "Bear Corpse", "Gem of the Forest Fragment", "Diamond", "Defense Blueprint", "Cultist Gem"},
+   Options = {"Feather", "Old Rod", "Flower", "Coin Stack", "Giant Sack", "Good Sack", "Seed Box", "Bunny Foot", "Wolf Pelt", "Bear pelt", "Artic Fox Pelt", "Alpha Wolf Pelt", "Polar Bear Pelt", "Bear Corpse", "Gem of the Forest Fragment", "Diamond", "Defense Blueprint", "Cultist Gem", "Sacrifice Totem"},
    CurrentOption = {},
    MultipleOptions = true,
    Flag = "Dropdown6",
